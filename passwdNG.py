@@ -6,13 +6,13 @@ def criaSenha():
     senhaUser = input("Digite a nova senha:")
     arq = open('/etc/shadow')
 
-    # Começando a criação do salt
+    # Starting salt creation
     salt = '$6$'
 
-    # Todos os caracteres alfanuméricos
+    # All alphanumeric ascii
     possiveisSalt = string.ascii_letters + string.digits
 
-    # Criando salt da senha
+    # Creating salt password
     for i in range(8):
         salt = salt + choice(possiveisSalt)
     salt = salt + '$'
