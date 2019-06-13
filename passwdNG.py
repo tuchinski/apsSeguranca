@@ -2,25 +2,25 @@ import crypt
 import string
 from random import choice
 
-def criaSenha():
-    senhaUser = input("Digite a nova senha:")
+def createPassword():
+    userPassword = input("Digite a nova senha:")
     arq = open('/etc/shadow')
 
     # Starting salt creation
     salt = '$6$'
 
     # All alphanumeric ascii
-    possiveisSalt = string.ascii_letters + string.digits
+    possibleSalt = string.ascii_letters + string.digits
 
     # Creating salt password
-    for i in range(8):
-        salt = salt + choice(possiveisSalt)
+    for a in range(8):
+        salt = salt + choice(possibleSalt)
     salt = salt + '$'
 
 
-    senhaCriptografada = crypt.crypt(senhaUser,salt)
+    encriptedPassword = crypt.crypt(userPassword,salt)
 
-    print(senhaCriptografada)
+    print(encriptedPassword)
 
 if __name__ == "__main__":
-    criaSenha()
+    createPassword()
