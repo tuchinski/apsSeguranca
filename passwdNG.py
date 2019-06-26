@@ -6,7 +6,6 @@ class Psswd:
     def __init__(self):
          print("INIT DA CLASSE Psswd")
          
-
     # GET shadow's lines users and return a simple list
     def get_file_shadow(self):
         users_shadow = []
@@ -39,7 +38,6 @@ class Psswd:
             salt = salt + choice(possibleSalt)
         salt = salt + '$'
         
-
         encriptedPassword = crypt.crypt(userPassword,salt)
 
         user_change = "false"

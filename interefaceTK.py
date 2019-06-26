@@ -2,16 +2,14 @@ import tkinter as tk
 from passwdNG import Psswd
 
 
-
-
 class SampleApp(tk.Tk):
     def __init__(self, psw):
         tk.Tk.__init__(self)
         self._frame = None
         self.switch_frame(Login, psw)
 
-    def switch_frame(self, frame_class, psw):
-        new_frame = frame_class(self, psw)
+    def switch_frame(self, frame_class, psw, data = None):
+        new_frame = frame_class(self, psw, data)
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
@@ -19,23 +17,9 @@ class SampleApp(tk.Tk):
         self._frame["pady"] = 10
         self._frame.pack()
 
-class StartPage(tk.Frame):
-    def __init__(self, master, passwdNG):
-        tk.Frame.__init__(self, master)
-        tk.Label(self, text="Start page", font=('Helvetica', 18, "bold")).pack(side="top", fill="x", pady=5)
-        tk.Button(self, text="Go to page one",
-                  command=lambda: master.switch_frame(PageOne)).pack()
-        tk.Button(self, text="Go to page two",command=lambda: master.switch_frame(PageTwo)).pack()
-
-class PageOne(tk.Frame):
-    def __init__(self, master, passwdNG):
-        tk.Frame.__init__(self, master)
-        tk.Frame.configure(self,bg='blue')
-        tk.Label(self, text="Page one", font=('Helvetica', 18, "bold")).pack(side="top", fill="x", pady=5)
-        tk.Button(self, text="Go back to start page", command=lambda: master.switch_frame(StartPage)).pack()
 
 class SelectUser(tk.Frame):
-    def __init__(self, master, passwdNG):
+    def __init__(self, master, passwdNG, data=None):
         tk.Frame.__init__(self, master)
 
         ###### DEFINE CONTAINER 00 ######
@@ -73,7 +57,7 @@ class SelectUser(tk.Frame):
             
         listbox.pack(side=tk.LEFT, pady=5, padx=1)
 
-        bottao_select = tk.Button(terceiroContainer, text="SELECT", command = lambda: master.switch_frame(EditPass, passwdNG))
+        bottao_select = tk.Button(terceiroContainer, text="SELECT", command = lambda: master.switch_frame(EditPass, passwdNG, str(listbox.get(tk.ANCHOR))))
         bottao_select["width"] = 5
         bottao_select["height"] = 10
         bottao_select.pack(side=tk.RIGHT, pady=5, padx=1)
@@ -82,7 +66,7 @@ class SelectUser(tk.Frame):
         print(username)
 
 class Login(tk.Frame):
-    def __init__(self, master, passwdNG):
+    def __init__(self, master, passwdNG, data=None):
         tk.Frame.__init__(self, master)
 
         ###### DEFINE CONTAINER 00 ######
@@ -123,7 +107,7 @@ class Login(tk.Frame):
         senha["width"] = 50
         senha.pack(side=tk.RIGHT, pady=5)
 
-        botao_login = tk.Button(terceiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG))
+        botao_login = tk.Button(terceiroContainer, command=lambda: master.switch_frame(Painel, passwdNG))
         botao_login["text"] = "Login"
         botao_login["width"] = 58
         botao_login.pack(pady=5)
@@ -139,8 +123,36 @@ class Login(tk.Frame):
             self.mensagem["text"] = "Erro na autenticação"
   
 
+class Painel(tk.Frame):
+    def __init__(self, master, passwdNG, data=None):
+        tk.Frame.__init__(self, master)
+
+        ###### DEFINE CONTAINER 00 ######
+        titleContainer = tk.Frame(self)
+        titleContainer.pack()
+
+        ###### DEFINE CONTAINER 01 ######
+        primeiroContainer = tk.Frame(self)
+        primeiroContainer.pack()
+
+        titulo = tk.Label(titleContainer, text=" -- Operation Painel -- ")
+        titulo["font"] = ("Arial", "15", "bold")
+        titulo.pack()
+
+        botao_create_user = tk.Button(primeiroContainer, command=lambda: master.switch_frame(CreateUser, passwdNG))
+        botao_create_user["text"] = "Create User"
+        botao_create_user["width"] = 58
+        botao_create_user.pack(pady=5)
+
+        botao_change_pass_user = tk.Button(primeiroContainer, command=lambda: master.switch_frame(EditPass, passwdNG))
+        botao_change_pass_user["text"] = "Change Pass User"
+        botao_change_pass_user["width"] = 58
+        botao_change_pass_user.pack(pady=5)
+
+
+
 class EditPass(tk.Frame):
-    def __init__(self, master, passwdNG):
+    def __init__(self, master, passwdNG, data=None):
         tk.Frame.__init__(self, master)
 
         ###### DEFINE CONTAINER 00 ######
@@ -162,6 +174,8 @@ class EditPass(tk.Frame):
         ###### DEFINE CONTAINER 04 ######
         quartoContainer = tk.Frame(self)
         quartoContainer.pack()
+
+        print(data)
 
         titulo = tk.Label(titleContainer, text=" -- Edit Pass -- ")
         titulo["font"] = ("Arial", "15", "bold")
@@ -198,6 +212,69 @@ class EditPass(tk.Frame):
         botao_Finish["text"] = "Finish"
         botao_Finish["width"] = 58
         botao_Finish.pack(pady=5)
+
+class CreateUser(tk.Frame):
+    def __init__(self, master, passwdNG, data=None):
+        tk.Frame.__init__(self, master)
+
+        ###### DEFINE CONTAINER 00 ######
+        titleContainer = tk.Frame(self)
+        titleContainer.pack()
+
+        ###### DEFINE CONTAINER 01 ######
+        primeiroContainer = tk.Frame(self)
+        primeiroContainer.pack()
+
+        ###### DEFINE CONTAINER 02 ######
+        segundoContainer = tk.Frame(self)
+        segundoContainer.pack()
+
+        ###### DEFINE CONTAINER 03 ######
+        terceiroContainer = tk.Frame(self)
+        terceiroContainer.pack()
+
+        ###### DEFINE CONTAINER 04 ######
+        quartoContainer = tk.Frame(self)
+        quartoContainer.pack()
+
+        print(data)
+
+        titulo = tk.Label(titleContainer, text=" -- Create User -- ")
+        titulo["font"] = ("Arial", "15", "bold")
+        titulo.pack()
+
+        lb_username = tk.Label(primeiroContainer, text="Username:", anchor="w")
+        lb_username["width"] = 30
+        lb_username["justify"] = tk.LEFT
+        lb_username.pack(side=tk.LEFT, pady=5)
+
+        username = tk.Entry(primeiroContainer, show="*")
+        username["width"] = 30
+        username.pack(side=tk.RIGHT, pady=5)
+
+        lb_pass = tk.Label(segundoContainer, text="Password:", anchor="w")
+        lb_pass["width"] = 30
+        lb_pass["justify"] = tk.LEFT
+        lb_pass.pack(side=tk.LEFT, pady=5)
+
+        password1 = tk.Entry(segundoContainer, show="*")
+        password1["width"] = 30
+        password1.pack(side=tk.RIGHT, pady=5)
+
+        lb_pass_new = tk.Label(terceiroContainer, text="Password again:", anchor="w")
+        lb_pass_new["width"] = 30
+        lb_pass_new["justify"] = tk.LEFT
+        lb_pass_new.pack(side=tk.LEFT, pady=5)
+
+        password2 = tk.Entry(terceiroContainer, show="*")
+        password2["width"] = 30
+        password2.pack(side=tk.RIGHT, pady=5)
+
+        botao_Finish = tk.Button(quartoContainer, command=lambda: master.switch_frame(Login, passwdNG))
+        botao_Finish["text"] = "Finish"
+        botao_Finish["width"] = 58
+        botao_Finish.pack(pady=5)
+  
   
   
 if __name__ == "__main__":
