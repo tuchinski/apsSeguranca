@@ -24,7 +24,6 @@ class Psswd:
             list_users_tokens.append(tokens)
         return list_users_tokens
 
-
     def createPassword(self):
         userName = input('Digite o nome do usuário:')
         userPassword = input("Digite a nova senha:")
