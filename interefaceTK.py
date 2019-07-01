@@ -148,6 +148,7 @@ class Painel(tk.Frame):
         primeiroContainer = tk.Frame(self)
         primeiroContainer.pack()
 
+
         self.titulo = tk.Label(titleContainer, text=" -- Operation Painel -- ")
         self.titulo["font"] = ("Arial", "15", "bold")
         self.titulo.pack()
@@ -159,6 +160,11 @@ class Painel(tk.Frame):
 
         self.botao_change_pass_user = tk.Button(primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG))
         self.botao_change_pass_user["text"] = "Change Pass User"
+        self.botao_change_pass_user["width"] = 58
+        self.botao_change_pass_user.pack(pady=5)
+
+        self.botao_change_pass_user = tk.Button(primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG))
+        self.botao_change_pass_user["text"] = "Recover Password"
         self.botao_change_pass_user["width"] = 58
         self.botao_change_pass_user.pack(pady=5)
 
@@ -218,11 +224,16 @@ class EditPass(tk.Frame):
         self.pass_new2 = tk.Entry(terceiroContainer, show="*")
         self.pass_new2["width"] = 30
         self.pass_new2.pack(side=tk.RIGHT, pady=5)
+       
+        self.botao_back = tk.Button(quartoContainer, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
+        self.botao_back["width"] = 1
+        self.botao_back.pack(side=tk.LEFT)
 
         self.botao_Finish = tk.Button(quartoContainer, command=lambda: self.get_data_edit_user(str(self.pass_current.get()), str(self.pass_new1.get()), str(self.pass_new2.get())))
         self.botao_Finish["text"] = "Finish"
         self.botao_Finish["width"] = 58
-        self.botao_Finish.pack(pady=5)
+        self.botao_Finish.pack(side=tk.RIGHT, pady=5)
+
 
         self.lb_alert = tk.Label(quartoContainer)
         self.lb_alert["text"] = ""
@@ -270,7 +281,6 @@ class EditPass(tk.Frame):
             self.lb_alert["fg"] = "red"
         
         if (digit != None and uppercase != None and lowercase != None and symbol != None):
-            self.lb_alert["text"] =  ""
             return (True)
         else:
             return (False)
@@ -288,10 +298,14 @@ class CreateUser(tk.Frame):
         primeiroContainer = tk.Frame(self)
         primeiroContainer.pack()
 
+        ###### DEFINE CONTAINER 05 ######
+        quintoContainer = tk.Frame(self)
+        quintoContainer.pack()
+
         ###### DEFINE CONTAINER 02 ######
         segundoContainer = tk.Frame(self)
         segundoContainer.pack()
-
+        
         ###### DEFINE CONTAINER 03 ######
         terceiroContainer = tk.Frame(self)
         terceiroContainer.pack()
@@ -300,6 +314,7 @@ class CreateUser(tk.Frame):
         quartoContainer = tk.Frame(self)
         quartoContainer.pack()
 
+        
         self.titulo = tk.Label(titleContainer, text=" -- Create New User -- ")
         self.titulo["font"] = ("Arial", "15", "bold")
         self.titulo.pack()
@@ -312,6 +327,15 @@ class CreateUser(tk.Frame):
         self.username = tk.Entry(primeiroContainer, show="*")
         self.username["width"] = 30
         self.username.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_email = tk.Label(quintoContainer, text="Email:", anchor="w")
+        self.lb_email["width"] = 30
+        self.lb_email["justify"] = tk.LEFT
+        self.lb_email.pack(side=tk.LEFT, pady=5)
+
+        self.email = tk.Entry(quintoContainer, show="*")
+        self.email["width"] = 30
+        self.email.pack(side=tk.RIGHT, pady=5)
 
         self.lb_pass = tk.Label(segundoContainer, text="Password:", anchor="w")
         self.lb_pass["width"] = 30
@@ -331,10 +355,14 @@ class CreateUser(tk.Frame):
         self.password2["width"] = 30
         self.password2.pack(side=tk.RIGHT, pady=5)
 
+        self.botao_back = tk.Button(quartoContainer, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
+        self.botao_back["width"] = 1
+        self.botao_back.pack(side=tk.LEFT)
+
         self.botao_Finish = tk.Button(quartoContainer, command=lambda: self.get_data_new_user(self.username.get(), self.password1.get(), self.password2.get()))
         self.botao_Finish["text"] = "Finish"
         self.botao_Finish["width"] = 58
-        self.botao_Finish.pack(pady=5)
+        self.botao_Finish.pack(side=tk.LEFT, pady=5)
     
         self.lb_alert = tk.Label(quartoContainer)
         self.lb_alert["text"] = ""
@@ -360,5 +388,5 @@ if __name__ == "__main__":
     backend_passwd = Psswd()
     app = SampleApp(backend_passwd)
     app.title("NEW PASSWD")
-    app.geometry("500x200")
+    app.geometry("500x300")
     app.mainloop()
