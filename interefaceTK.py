@@ -2,13 +2,14 @@ import tkinter as tk
 import re
 from passwdNG import Psswd
 import time
+from tkcalendar import Calendar, DateEntry
 
 
 class SampleApp(tk.Tk):
     def __init__(self, psw):
         tk.Tk.__init__(self)
         self._frame = None
-        self.switch_frame(Login, psw)
+        self.switch_frame(CreateUser, psw)
 
     def switch_frame(self, frame_class, psw, data = None):
         new_frame = frame_class(self, psw, data)
@@ -314,6 +315,16 @@ class CreateUser(tk.Frame):
         quartoContainer = tk.Frame(self)
         quartoContainer.pack()
 
+        ###### DEFINE CONTAINER 05 ######
+        quintoContainer = tk.Frame(self)
+        quintoContainer.pack()
+
+        ###### DEFINE CONTAINER 06 ######
+        sextoContainer = tk.Frame(self)
+        sextoContainer.pack()
+        
+        setimoContainer = tk.Frame(self)
+        setimoContainer.pack()
         
         self.titulo = tk.Label(titleContainer, text=" -- Create New User -- ")
         self.titulo["font"] = ("Arial", "15", "bold")
@@ -327,15 +338,6 @@ class CreateUser(tk.Frame):
         self.username = tk.Entry(primeiroContainer, show="*")
         self.username["width"] = 30
         self.username.pack(side=tk.RIGHT, pady=5)
-
-        self.lb_email = tk.Label(quintoContainer, text="Email:", anchor="w")
-        self.lb_email["width"] = 30
-        self.lb_email["justify"] = tk.LEFT
-        self.lb_email.pack(side=tk.LEFT, pady=5)
-
-        self.email = tk.Entry(quintoContainer, show="*")
-        self.email["width"] = 30
-        self.email.pack(side=tk.RIGHT, pady=5)
 
         self.lb_pass = tk.Label(segundoContainer, text="Password:", anchor="w")
         self.lb_pass["width"] = 30
@@ -354,20 +356,71 @@ class CreateUser(tk.Frame):
         self.password2 = tk.Entry(terceiroContainer, show="*")
         self.password2["width"] = 30
         self.password2.pack(side=tk.RIGHT, pady=5)
+        
+        self.lb_email = tk.Label(quartoContainer, text="Email:", anchor="w")
+        self.lb_email["width"] = 30
+        self.lb_email["justify"] = tk.LEFT
+        self.lb_email.pack(side=tk.LEFT, pady=5)
 
-        self.botao_back = tk.Button(quartoContainer, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
+        self.email = tk.Entry(quartoContainer, show="*")
+        self.email["width"] = 30
+        self.email.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_validate = tk.Label(quintoContainer, text='I want to choose an expiration date:', anchor="w")
+        self.lb_validate["width"] = 30
+        self.lb_validate["justify"] = tk.LEFT
+        self.lb_validate.pack(side=tk.LEFT, pady=5)
+
+        self.var = tk.IntVar()
+        self.btn_radio_yes = tk.Radiobutton(quintoContainer, text="Yes", variable=self.var, value=1, command=self.sel)
+        self.btn_radio_yes["width"] = 15
+        self.btn_radio_yes.pack(side=tk.RIGHT, pady=5)
+
+        self.btn_radio_no = tk.Radiobutton(quintoContainer, text="No", variable=self.var, value=2, command=self.sel)
+        self.btn_radio_no["width"] = 15
+        self.btn_radio_no.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_date1 = tk.Label(sextoContainer, text='Validade-Inicio:', anchor="w")
+        self.lb_date1["width"] = 15
+        self.lb_date1["justify"] = tk.LEFT
+
+        self.cal1 = DateEntry(sextoContainer, foreground='white', anchor="w", )
+        
+        self.lb_date2 = tk.Label(sextoContainer, text='Validade-Final:', anchor="w")
+        self.lb_date2["width"] = 15
+        self.lb_date2["justify"] = tk.LEFT
+        
+        self.cal2 = DateEntry(sextoContainer, foreground='white', anchor="c")
+
+        self.botao_back = tk.Button(setimoContainer, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
         self.botao_back["width"] = 1
         self.botao_back.pack(side=tk.LEFT)
 
-        self.botao_Finish = tk.Button(quartoContainer, command=lambda: self.get_data_new_user(self.username.get(), self.password1.get(), self.password2.get()))
+        self.botao_Finish = tk.Button(setimoContainer, command=lambda: self.get_data_new_user(self.username.get(), self.password1.get(), self.password2.get()))
         self.botao_Finish["text"] = "Finish"
         self.botao_Finish["width"] = 58
         self.botao_Finish.pack(side=tk.LEFT, pady=5)
     
-        self.lb_alert = tk.Label(quartoContainer)
+        self.lb_alert = tk.Label(setimoContainer)
         self.lb_alert["text"] = ""
         self.lb_alert["font"] = ("Arial", "9", "bold")
         self.lb_alert.pack()
+
+        
+    def sel(self):
+        if str(self.var.get()) == "1":
+            self.lb_date1.pack(side=tk.LEFT, pady=5)
+            self.cal1.pack(side=tk.LEFT, pady=5)
+            self.lb_date2.pack(side=tk.LEFT, pady=5)
+            self.cal2.pack(side=tk.RIGHT, pady=5)
+        else:
+            self.lb_date1.pack_forget()
+            self.cal1.pack_forget()
+            self.lb_date2.pack_forget()
+            self.cal2.pack_forget()
+            
+        
+        
 
     def get_data_new_user(self, username, pass1, pass2):
         if ((username and pass1 and pass2) != ""):

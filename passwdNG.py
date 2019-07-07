@@ -23,6 +23,12 @@ class Psswd:
             list_users_tokens.append(tokens)
         return list_users_tokens
 
+    def create_new_user(self, username, password, email, nivel_access):
+        #QUEM FOR FAZER ESSA PARTE IRA RECEBER DA INTERFACE OS PARAMETROS ACIMA
+        print('createuser')
+
+
+
     def createPassword(self):
         userName = input('Digite o nome do usuário:')
         userPassword = input("Digite a nova senha:")
