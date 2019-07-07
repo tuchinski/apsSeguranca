@@ -311,9 +311,21 @@ class CreateUser(tk.Frame):
         terceiroContainer = tk.Frame(self)
         terceiroContainer.pack()
 
+        ###### DEFINE CONTAINER Name ######
+        nameContainer = tk.Frame(self)
+        nameContainer.pack()
+        
+        ###### DEFINE CONTAINER Phone ######
+        phoneContainer = tk.Frame(self)
+        phoneContainer.pack()
+        
         ###### DEFINE CONTAINER 04 ######
         quartoContainer = tk.Frame(self)
         quartoContainer.pack()
+
+        ###### DEFINE CONTAINER Other ######
+        otherContainer = tk.Frame(self)
+        otherContainer.pack()
 
         ###### DEFINE CONTAINER 05 ######
         quintoContainer = tk.Frame(self)
@@ -322,7 +334,7 @@ class CreateUser(tk.Frame):
         ###### DEFINE CONTAINER 06 ######
         sextoContainer = tk.Frame(self)
         sextoContainer.pack()
-        
+
         setimoContainer = tk.Frame(self)
         setimoContainer.pack()
         
@@ -356,7 +368,36 @@ class CreateUser(tk.Frame):
         self.password2 = tk.Entry(terceiroContainer, show="*")
         self.password2["width"] = 30
         self.password2.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_name = tk.Label(nameContainer, text="Full Name:", anchor="w")
+        self.lb_name["width"] = 30
+        self.lb_name["justify"] = tk.LEFT
+        self.lb_name.pack(side=tk.LEFT, pady=5)
+
+        self.name = tk.Entry(nameContainer, show="*")
+        self.name["width"] = 30
+        self.name.pack(side=tk.RIGHT, pady=5)
         
+        self.lb_tell = tk.Label(phoneContainer, text="Tell Phone:", anchor="w")
+        self.lb_tell["width"] = 30
+        self.lb_tell["justify"] = tk.LEFT
+        self.lb_tell.pack(side=tk.LEFT, pady=5)
+
+        self.tell = tk.Entry(phoneContainer, show="*")
+        self.tell["width"] = 30
+        self.tell.pack(side=tk.RIGHT, pady=5)
+        
+       
+        self.lb_other = tk.Label(otherContainer, text="Other:", anchor="w")
+        self.lb_other["width"] = 30
+        self.lb_other["justify"] = tk.LEFT
+        self.lb_other.pack(side=tk.LEFT, pady=5)
+
+        self.other = tk.Text(otherContainer)
+        self.other["width"] = 30
+        self.other["height"] = 3
+        self.other.pack(side=tk.RIGHT, pady=5)
+
         self.lb_email = tk.Label(quartoContainer, text="Email:", anchor="w")
         self.lb_email["width"] = 30
         self.lb_email["justify"] = tk.LEFT
@@ -420,8 +461,6 @@ class CreateUser(tk.Frame):
             self.cal2.pack_forget()
             
         
-        
-
     def get_data_new_user(self, username, pass1, pass2):
         if ((username and pass1 and pass2) != ""):
             if pass1 == pass2:

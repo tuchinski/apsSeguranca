@@ -1,10 +1,10 @@
 import crypt
-import string
+import string, random
 from random import choice
 
 class Psswd:
     def __init__(self):
-         print("INIT DA CLASSE Psswd")
+         print("---")
          
     # GET shadow's lines users and return a simple list
     def get_file_shadow(self):
@@ -13,6 +13,14 @@ class Psswd:
         for line in fileShadow:
             users_shadow.append(line)
         return users_shadow
+
+    # GET passwd's lines users and return a simple list
+    def get_file_passwd(self):
+        users_passwd= []
+        filePasswd= open("/etc/passwd")
+        for line in filePasswd:
+            users_passwd.append(line)
+        return users_passwd
 
     def get_tokens_by_user_shadow(self):
         list_users = self.get_file_shadow()
@@ -23,9 +31,38 @@ class Psswd:
             list_users_tokens.append(tokens)
         return list_users_tokens
 
-    def create_new_user(self, username, password, email, nivel_access):
-        #QUEM FOR FAZER ESSA PARTE IRA RECEBER DA INTERFACE OS PARAMETROS ACIMA
-        print('createuser')
+    def get_tokens_by_user_passwd(self):
+        list_users = self.get_file_passwd()
+        list_users_tokens = []
+        for users in list_users:
+            tokens = []
+            tokens = users.split(':')
+            list_users_tokens.append(tokens)
+        return list_users_tokens
+
+    def who_is_the_biggest_ID(self):
+        list_tokens = self.get_tokens_by_user_passwd()
+        maior = 0
+        for user in list_tokens:
+            if (int(user[2]) > maior):
+                maior = int(user[2]) 
+        return maior
+
+    def create_new_user(self, username, password, fullname=None, tellphone=None, email=None, other=None, nivel_access=None):
+        # Here, we have the line that goint to add in the file shadow
+        randomsalt = ''.join(random.sample(string.ascii_letters,8))
+        randomsalt = '$6$' + randomsalt + '$'
+        line_shadow = crypt.crypt(password, randomsalt)
+        line_shadow = username + ':' + line_shadow
+        print(line_shadow)
+
+        # Here, we have the line that goint to add in the file passwd
+        the_last_biggest_ID = self.who_is_the_biggest_ID() + 1
+        comentarios = '['+ 'fullname:' + str(fullname) + ', tellphone:' + str(tellphone) + ', email:' + str(email) + ', other:' + str(other) + ']'
+        line_passwd = username + ':x:' + str(the_last_biggest_ID) + ':' + str(the_last_biggest_ID) + ':' + comentarios + ':/home/' + username + ':/bin/bash'
+        print(line_passwd)
+
+        
 
 
 
@@ -78,4 +115,5 @@ class Psswd:
 
 
 if __name__ == "__main__":
-    print("MAIN")
+    passwdng = Psswd()
+    passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
