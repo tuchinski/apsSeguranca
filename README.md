@@ -3,6 +3,10 @@ Avaliação Prática Supervisionada – Segurança e Auditoria de Sistemas – p
  
 Software que substitui o comando passwd do Linux. O comando passwd é o comando responsável por tratar senhas de usuários no Linux, o passwdNG implementa e estende o comando passwd, bem como suas funcionalidades.
 
+(INSTALAR)
+pip3 install tkcalendar
+
+
 ## Equipe
 Leonardo Tuchinski</p>
 Ana Frozza</p>
