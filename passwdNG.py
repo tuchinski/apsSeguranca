@@ -118,7 +118,7 @@ class Psswd:
                 user[1] = '!x'
                 return user
             
-        return "Não achei" 
+        return "Não existe o usuário cadastrado"
 
 
 
