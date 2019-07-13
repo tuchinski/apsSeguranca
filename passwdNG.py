@@ -5,7 +5,7 @@ from random import choice
 class Psswd:
     def __init__(self):
          print("---")
-         
+
     # GET shadow's lines users and return a simple list
     def get_file_shadow(self):
         users_shadow = []
@@ -63,9 +63,6 @@ class Psswd:
         print(line_passwd)
 
         
-
-
-
     def createPassword(self):
         userName = input('Digite o nome do usuário:')
         userPassword = input("Digite a nova senha:")
@@ -110,10 +107,49 @@ class Psswd:
         return new_line[:-1]
 
         # print(len(fileShadowRead))
-        
+
+    # Salva ou atualiza um usuario
+    def saveUpdate_shadow(self, user):
+        users_tokens = []
+        users_tokens = self.get_tokens_by_user_passwd()
+        for i in users_tokens:
+            if(i[0] == user[0]):
+                users_tokens.remove(i)
+                break
+
+        users_tokens.append(user)
+        users_tokens_str = ''
+        for i in users_tokens:
+            users_tokens_str += ':'.join(i)
+
+        fileShadow = open('/etc/shadow.def', 'w+')
+        fileShadow.write(users_tokens_str)
+     
+        fileShadow.close()
+
+        # fileShadow = open('/etc/shadow.def')
+        # print(fileShadow.read())
+
+    # desbloqueia o usuario
+    def unlockUser(self, user):
+        users_tokens = []
+        users_tokens = self.get_tokens_by_user_passwd()
+        for i in users_tokens:
+            if i[0] == user:
+                i[1] = "x"
+                user_unlock = i
+                break
+        self.saveUpdate_shadow(user_unlock)
+        # print(user_unlock)
+        return 
+
+    
+
+
 
 
 
 if __name__ == "__main__":
     passwdng = Psswd()
-    passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
+    # passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
+    passwdng.unlockUser('teste')
