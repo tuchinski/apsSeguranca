@@ -9,7 +9,7 @@ class SampleApp(tk.Tk):
     def __init__(self, psw):
         tk.Tk.__init__(self)
         self._frame = None
-        self.switch_frame(CreateUser, psw)
+        self.switch_frame(Login, psw)
 
     def switch_frame(self, frame_class, psw, data=None):
         new_frame = frame_class(self, psw, data)
@@ -350,6 +350,9 @@ class CreateUser(tk.Frame):
         setimoContainer = tk.Frame(self)
         setimoContainer.pack()
 
+        oitavoContainer = tk.Frame(self)
+        oitavoContainer.pack()
+
         self.titulo = tk.Label(titleContainer, text=" -- Create New User -- ")
         self.titulo["font"] = ("Arial", "15", "bold")
         self.titulo.pack()
@@ -462,7 +465,7 @@ class CreateUser(tk.Frame):
         self.botao_Finish["width"] = 58
         self.botao_Finish.pack(side=tk.LEFT, pady=5)
 
-        self.lb_alert = tk.Label(setimoContainer)
+        self.lb_alert = tk.Label(oitavoContainer)
         self.lb_alert["text"] = ""
         self.lb_alert["font"] = ("Arial", "9", "bold")
         self.lb_alert.pack()
