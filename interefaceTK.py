@@ -482,12 +482,43 @@ class CreateUser(tk.Frame):
             self.lb_date2.pack_forget()
             self.cal2.pack_forget()
 
+    def valid_password(self, password):
+        digit = re.search(r"\d", password)
+        uppercase = re.search(r"[A-Z]", password)
+        lowercase = re.search(r"[a-z]", password)
+        symbol = re.search(r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]', password)
+
+        print(str(len(str(password))), digit, uppercase, lowercase, symbol)
+        print(len(str(password)))
+        if len(str(password)) < 6:
+            self.lb_alert["text"] = "Passwords should consist of 6 to 8 characters."
+            self.lb_alert["fg"] = "red"
+        if digit == None:
+            self.lb_alert["text"] = "Passwords should contain digits [0-9]."
+            self.lb_alert["fg"] = "red"
+        if uppercase == None:
+            self.lb_alert["text"] = "Passwords should contain upper case characters."
+            self.lb_alert["fg"] = "red"
+        if lowercase == None:
+            self.lb_alert["text"] = "Passwords should contain lower case characters."
+            self.lb_alert["fg"] = "red"
+        if symbol == None:
+            self.lb_alert["text"] = "Passwords should contain symbols."
+            self.lb_alert["fg"] = "red"
+
+        if (digit != None and uppercase != None and lowercase != None and symbol != None):
+            return (True)
+        else:
+            return (False)
+
     def get_data_new_user(self, username, pass1, pass2):
         if ((username and pass1 and pass2) != ""):
             if pass1 == pass2:
-                self.lb_alert["text"] = "The user was created."
-                self.lb_alert["fg"] = "green"
-                print(self.passwdNG.get_file_shadow())
+                if (self.valid_password(pass1)):
+                    self.lb_alert["text"] = "The user was created."
+                    self.lb_alert["fg"] = "green"
+                    print(self.passwdNG.get_file_shadow())
+
             else:
                 self.lb_alert["text"] = "The passwords do not match."
                 self.lb_alert["fg"] = "red"
