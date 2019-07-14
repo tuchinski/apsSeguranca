@@ -141,8 +141,8 @@ class Psswd:
      
         fileShadow.close()
 
-        fileShadow = open('/etc/passwd.teste')
-        print(fileShadow.read())
+       # fileShadow = open('/etc/passwd.teste')
+        #print(fileShadow.read())
 
     # salva a galerinha
     def save_passwd(self, user):
@@ -160,8 +160,8 @@ class Psswd:
      
         fileShadow.close()
 
-        fileShadow = open('/etc/passwd.teste')
-        print(fileShadow.read())
+        #fileShadow = open('/etc/passwd.teste')
+        #print(fileShadow.read())
 
     # Save a new user on shadow file. Recieves the line to add on /etc/shadow
     def adduser_shadow(self,line):
