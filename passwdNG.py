@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import crypt
 import string, random
 from random import choice
