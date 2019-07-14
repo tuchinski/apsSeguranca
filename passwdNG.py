@@ -55,13 +55,14 @@ class Psswd:
         line_shadow = crypt.crypt(password, randomsalt)
         line_shadow = username + ':' + line_shadow
         print(line_shadow)
+        self.adduser_shadow(line_shadow)
 
         # Here, we have the line that goint to add in the file passwd
         the_last_biggest_ID = self.who_is_the_biggest_ID() + 1
         comentarios = '['+ 'fullname:' + str(fullname) + ', tellphone:' + str(tellphone) + ', email:' + str(email) + ', other:' + str(other) + ']'
         line_passwd = username + ':x:' + str(the_last_biggest_ID) + ':' + str(the_last_biggest_ID) + ':' + comentarios + ':/home/' + username + ':/bin/bash'
-        # print(line_passwd)
-        self.save_shadow(line_passwd)
+        print(line_passwd)
+        # self.save_passwd(line_passwd)
 
         
     def createPassword(self):
@@ -119,10 +120,10 @@ class Psswd:
                 token_change = user
                 break
         
-        self.update_shadow(user)
+        self.update_passwd(user)
 
     # Atualiza um usuario
-    def update_shadow(self, user):
+    def update_passwd(self, user):
         users_tokens = []
         users_tokens = self.get_tokens_by_user_passwd()
         for i in users_tokens:
@@ -135,16 +136,16 @@ class Psswd:
         for i in users_tokens:
             users_tokens_str += ':'.join(i)
 
-        fileShadow = open('/etc/shadow.def', 'w+')
+        fileShadow = open('/etc/passwd.teste', 'w+')
         fileShadow.write(users_tokens_str)
      
         fileShadow.close()
 
-        fileShadow = open('/etc/shadow.def')
+        fileShadow = open('/etc/passwd.teste')
         print(fileShadow.read())
 
     # salva a galerinha
-    def save_shadow(self, user):
+    def save_passwd(self, user):
         # print(user)
         users_tokens = []
         users_tokens = self.get_tokens_by_user_passwd()
@@ -154,16 +155,16 @@ class Psswd:
             users_tokens_str += ':'.join(i)
 
         users_tokens_str += user
-        fileShadow = open('/etc/shadow.def', 'w+')
+        fileShadow = open('/etc/passwd.teste', 'w+')
         fileShadow.write(users_tokens_str)
      
         fileShadow.close()
 
-        fileShadow = open('/etc/shadow.def')
+        fileShadow = open('/etc/passwd.teste')
         print(fileShadow.read())
 
-    # Save on shadow file
-    def save_shadow2(self,line):
+    # Save a new user on shadow file. Recieves the line to add on /etc/shadow
+    def adduser_shadow(self,line):
         file = self.get_file_shadow()
         file.append(line)
         passwd = open('/etc/shadow.teste', 'w+')
@@ -183,7 +184,7 @@ class Psswd:
                 i[1] = "x"
                 user_unlock = i
                 break
-        self.update_shadow(user_unlock)
+        self.update_passwd(user_unlock)
         # print(user_unlock)
         return 
 
@@ -196,7 +197,7 @@ class Psswd:
 
 if __name__ == "__main__":
     passwdng = Psswd()
-    # passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
-    passwdng.save_shadow2('usersemsenha:*:18089:0:99999:7:::\n')
-    # passwdng.unlockUser('teste2')
+    #passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
+    # passwdng.save_shadow2('usersemsenha:*:18089:0:99999:7:::\n')
+    passwdng.unlockUser('teste2')
 
