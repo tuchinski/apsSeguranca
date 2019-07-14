@@ -60,7 +60,8 @@ class Psswd:
         the_last_biggest_ID = self.who_is_the_biggest_ID() + 1
         comentarios = '['+ 'fullname:' + str(fullname) + ', tellphone:' + str(tellphone) + ', email:' + str(email) + ', other:' + str(other) + ']'
         line_passwd = username + ':x:' + str(the_last_biggest_ID) + ':' + str(the_last_biggest_ID) + ':' + comentarios + ':/home/' + username + ':/bin/bash'
-        print(line_passwd)
+        # print(line_passwd)
+        self.save_shadow(line_passwd)
 
         
     def createPassword(self):
@@ -118,10 +119,10 @@ class Psswd:
                 token_change = user
                 break
         
-        self.saveUpdate_shadow(user)
+        self.update_shadow(user)
 
-    # Salva ou atualiza um usuario
-    def saveUpdate_shadow(self, user):
+    # Atualiza um usuario
+    def update_shadow(self, user):
         users_tokens = []
         users_tokens = self.get_tokens_by_user_passwd()
         for i in users_tokens:
@@ -139,8 +140,27 @@ class Psswd:
      
         fileShadow.close()
 
-        # fileShadow = open('/etc/shadow.def')
-        # print(fileShadow.read())
+        fileShadow = open('/etc/shadow.def')
+        print(fileShadow.read())
+
+    # salva a galerinha
+    def save_shadow(self, user):
+        # print(user)
+        users_tokens = []
+        users_tokens = self.get_tokens_by_user_passwd()
+        
+        users_tokens_str = ''
+        for i in users_tokens:
+            users_tokens_str += ':'.join(i)
+
+        users_tokens_str += user
+        fileShadow = open('/etc/shadow.def', 'w+')
+        fileShadow.write(users_tokens_str)
+     
+        fileShadow.close()
+
+        fileShadow = open('/etc/shadow.def')
+        print(fileShadow.read())
 
     # desbloqueia o usuario
     def unlockUser(self, user):
@@ -151,7 +171,7 @@ class Psswd:
                 i[1] = "x"
                 user_unlock = i
                 break
-        self.saveUpdate_shadow(user_unlock)
+        self.update_shadow(user_unlock)
         # print(user_unlock)
         return 
 
@@ -166,5 +186,5 @@ if __name__ == "__main__":
     passwdng = Psswd()
     # passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
 
-    passwdng.unlockUser('teste2')
+    # passwdng.unlockUser('teste2')
 
