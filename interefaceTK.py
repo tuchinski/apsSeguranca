@@ -557,6 +557,9 @@ class GerenciarSenha(tk.Frame):
         tamanhoSenhaContainer = tk.Frame(self)
         tamanhoSenhaContainer.pack()
 
+        alertContainer = tk.Frame(self)
+        alertContainer.pack()
+
         ###### DEFINE CONTAINER voltar ######
         voltar = tk.Frame(self)
         voltar.pack()
@@ -564,9 +567,6 @@ class GerenciarSenha(tk.Frame):
         self.titulo = tk.Label(titleContainer, text=" -- Gerenciar Senha -- ")
         self.titulo["font"] = ("Arial", "15", "bold")
         self.titulo.pack()
-
-        # varLowerCase = IntVar()
-        # Checkbutton(master, text="male", variable=var1).grid(row=0, sticky=W)
 
         self.lb_lowerCase = tk.Label(
             lowerContainer, text="Quantidade de caracteres minúsculos(a - z)", anchor="w")
@@ -619,7 +619,8 @@ class GerenciarSenha(tk.Frame):
         self.tamanhoSenha.pack(side=tk.RIGHT, pady=5)
 
         self.btn_ok = tk.Button(
-            voltar, text="Concluir", command=lambda: self.funcao_ok(self.qtdLower.get()),)
+            voltar, text="Concluir", command=lambda: self.funcao_ok(self.qtdLower.get(), self.qtdUpper.get(),
+                                                                    self.qtdNumeros.get(), self.qtdSimbolos.get(), self.tamanhoSenha.get()),)
         self.btn_ok["width"] = 50
         self.btn_ok.pack(side=tk.RIGHT)
 
@@ -628,10 +629,19 @@ class GerenciarSenha(tk.Frame):
         self.botao_back["width"] = 1
         self.botao_back.pack(side=tk.RIGHT)
 
-    def funcao_ok(self, variavel):
-        # if variavel == 0:
+        self.lb_alert = tk.Label(alertContainer)
+        self.lb_alert["text"] = ""
+        self.lb_alert["font"] = ("Arial", "9", "bold")
+        self.lb_alert.pack()
 
-        print(variavel)
+    def funcao_ok(self, lower, upper, numero, simbolos, tamSenha):
+        if lower.isnumeric() and upper.isnumeric() and numero.isnumeric() and simbolos.isnumeric() and tamSenha.isnumeric():
+            self.lb_alert["text"] = "Sucess."
+            self.lb_alert["fg"] = "green"
+            # self.master.switch_frame(PainelAdm, self.passwdNG)
+        else:
+            self.lb_alert["text"] = "Just numbers."
+            self.lb_alert["fg"] = "red"
 
 
 class PainelAdm(tk.Frame):
