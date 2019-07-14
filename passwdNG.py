@@ -54,14 +54,14 @@ class Psswd:
         randomsalt = '$6$' + randomsalt + '$'
         line_shadow = crypt.crypt(password, randomsalt)
         line_shadow = username + ':' + line_shadow
-        print(line_shadow)
+        #print(line_shadow)
         self.adduser_shadow(line_shadow)
 
         # Here, we have the line that goint to add in the file passwd
         the_last_biggest_ID = self.who_is_the_biggest_ID() + 1
         comentarios = '['+ 'fullname:' + str(fullname) + ', tellphone:' + str(tellphone) + ', email:' + str(email) + ', other:' + str(other) + ']'
         line_passwd = username + ':x:' + str(the_last_biggest_ID) + ':' + str(the_last_biggest_ID) + ':' + comentarios + ':/home/' + username + ':/bin/bash'
-        print(line_passwd)
+        #print(line_passwd)
         # self.save_passwd(line_passwd)
 
         
