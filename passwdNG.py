@@ -82,7 +82,7 @@ class Psswd:
 
         user_change = "false"
         # print(encriptedPassword)
-        fileShadow = open('/etc/shadow')
+        fileShadow = open('/etc/shadow.def')
         conteudo = fileShadow.readlines()
         fileShadowRead = fileShadow.read().split()
         for line in fileShadowRead:
