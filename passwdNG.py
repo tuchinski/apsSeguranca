@@ -111,12 +111,14 @@ class Psswd:
 
     def blockUser(self,username):
         tokens = self.get_tokens_by_user_passwd()
+        token_change = ''
         for user in tokens:
             if user[0] == username:
                 user[1] = '!x'
-                return user
-            
-        return "Não existe o usuário cadastrado"
+                token_change = user
+                break
+        
+        self.saveUpdate_shadow(user)
 
     # Salva ou atualiza um usuario
     def saveUpdate_shadow(self, user):
@@ -164,5 +166,5 @@ if __name__ == "__main__":
     passwdng = Psswd()
     # passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
 
-    passwdng.unlockUser('teste')
+    passwdng.unlockUser('teste2')
 
