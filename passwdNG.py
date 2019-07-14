@@ -162,6 +162,18 @@ class Psswd:
         fileShadow = open('/etc/shadow.def')
         print(fileShadow.read())
 
+    # Save on shadow file
+    def save_shadow2(self,line):
+        file = self.get_file_shadow()
+        file.append(line)
+        passwd = open('/etc/shadow.teste', 'w+')
+
+        string_to_save = ''.join(file)
+        passwd.write(string_to_save)
+
+        passwd.close()
+        # print(string_to_save)
+
     # desbloqueia o usuario
     def unlockUser(self, user):
         users_tokens = []
@@ -185,6 +197,6 @@ class Psswd:
 if __name__ == "__main__":
     passwdng = Psswd()
     # passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
-
+    passwdng.save_shadow2('usersemsenha:*:18089:0:99999:7:::\n')
     # passwdng.unlockUser('teste2')
 
