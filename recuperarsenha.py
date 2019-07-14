@@ -3,6 +3,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
 import random
+import crypt
+import string
+from random import choice
 
 def recuperarSenha(email):
 	alfabeto = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -36,10 +39,52 @@ def recuperarSenha(email):
 	print "successfully sent email to %s:" % (msg['To'])
 
 def encontrarUsuario(email):
-	fileShadow = open('/etc/shadow')
-	for line in fileShadow.readlines():
-		if email in line:
-			print("line")
+	file = open('/etc/passwd')
+	for i in file.readlines():
+		if email in i:
+			line = i
+	usuario = line.split(':')
+	usuario = usuario[0]
+	return usuario
+
+def alterarSenha(usuario, senha):
+	salt = '$6$'
+	possibleSalt = string.ascii_letters + string.digits
+
+	for a in range(8):
+		salt = salt + choice(possibleSalt)
+
+	salt = salt + '$'
+	encriptedPassword = crypt.crypt(senha,salt)
+
+	c = -1
+
+	file = open('teste.txt', 'rw')
+	for i in file.readlines():
+		c = c + 1
+		if usuario in i:
+			line = i
+			print(line)
+			c_line = c
+
+	aux = line.split(':')[0] + ":" + line.split(':')[1]
+	newKey = line.split(':')[0] + ":" + encriptedPassword
+
+	file = open('teste.txt', 'rw')
+	for i in file.readlines():
+		if aux in i:
+			print(aux)
+
+def alterar_linha(path,index_linha,nova_linha):
+    with open(path,'r') as f:
+        texto=f.readlines()
+    with open(path,'w') as f:
+        for i in texto:
+            if texto.index(i)==index_linha:
+                f.write(nova_linha+'\n')
+            else:
+                f.write(i)
 
 #recuperarSenha("allisonsampaiox@gmail.com")
-encontrarUsuario("colour")
+alterarSenha("allisonsampaiox", "123mudar")
+#alterar_linha("teste.txt", 0, "oi")
