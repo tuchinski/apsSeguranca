@@ -1,0 +1,8 @@
+Qual o nome do seu primeiro animal de estimação?
+Qual sua comida favorita ?
+Qual o nome do seu melhor amigo de infancia?
+Qual o nome da sua professora favorita ?
+Em que cidade voce nasceu ?
+Qual sua série favorita ?
+Onde sua mão nasceu ?
+Onde seu pai nasceu ?

@@ -1,13 +1,15 @@
 import crypt
-import string, random
+import string
+import random
 from random import choice
 import datetime
 from datetime import date
 import os
 
+
 class Psswd:
     def __init__(self):
-         print("---")
+        print("---")
 
     # GET shadow's lines users and return a simple list
     def get_file_shadow(self):
@@ -19,8 +21,8 @@ class Psswd:
 
     # GET passwd's lines users and return a simple list
     def get_file_passwd(self):
-        users_passwd= []
-        filePasswd= open("/etc/passwd")
+        users_passwd = []
+        filePasswd = open("/etc/passwd")
         for line in filePasswd:
             users_passwd.append(line)
         return users_passwd
@@ -82,13 +84,15 @@ class Psswd:
         maior = 0
         for user in list_tokens:
             if (int(user[2]) > maior):
-                maior = int(user[2]) 
+                maior = int(user[2])
         return maior
 
-    def create_new_user(self, username, password, fullname=None, tellphone=None, email=None, other=None, nivel_access=None):
+    def create_new_user(self, username, password, fullname=None, tellphone=None, email=None, other=None, nivel_access=None, security_question=None, security_asnwer=None):
         # Here, we have the line that goint to add in the file shadow
+
         line_shadow = self.createShadowLineNewUsers(username,password)
     
+
         # print(line_shadow)
         self.adduser_shadow(line_shadow)
 
@@ -192,7 +196,7 @@ class Psswd:
         file_gshadow.write(newString_gshadow)
         file_gshadow.close()
 
-        
+
     def createPassword(self):
         userName = input('Digite o nome do usuário:')
         userPassword = input("Digite a nova senha:")
@@ -207,8 +211,8 @@ class Psswd:
         for a in range(8):
             salt = salt + choice(possibleSalt)
         salt = salt + '$'
-        
-        encriptedPassword = crypt.crypt(userPassword,salt)
+
+        encriptedPassword = crypt.crypt(userPassword, salt)
 
         user_change = "false"
         # print(encriptedPassword)
@@ -224,22 +228,19 @@ class Psswd:
                 user_change = "true"
                 fileShadow.write(makeLineShadow(lineBreak))
                 break
-    
-        if user_change == "false":
-            print ("Este usuario não esta presente sistema")       
-                
 
+        if user_change == "false":
+            print("Este usuario não esta presente sistema")
 
     def makeLineShadow(self, lineBreak):
         new_line = ""
         for i in lineBreak:
-            new_line = new_line + i +":"
+            new_line = new_line + i + ":"
         return new_line[:-1]
 
         # print(len(fileShadowRead))
 
-
-    def blockUser(self,username):
+    def blockUser(self, username):
         tokens = self.get_tokens_by_user_passwd()
         token_change = ''
         for user in tokens:
@@ -247,7 +248,7 @@ class Psswd:
                 user[1] = '!x'
                 token_change = user
                 break
-        
+
         self.update_passwd(user)
 
     # Atualiza um usuario
@@ -266,18 +267,17 @@ class Psswd:
 
         fileShadow = open('/etc/passwd.teste', 'w+')
         fileShadow.write(users_tokens_str)
-     
+
         fileShadow.close()
 
        # fileShadow = open('/etc/passwd.teste')
-        #print(fileShadow.read())
+        # print(fileShadow.read())
 
     # salva a galerinha
     def save_passwd(self, user):
         # print(user)
         users_tokens = []
         users_tokens = self.get_tokens_by_user_passwd()
-        
         users_tokens_str = ''
         for i in users_tokens:
             users_tokens_str += ':'.join(i)
@@ -285,14 +285,20 @@ class Psswd:
         users_tokens_str += user + '\n'
         fileShadow = open('/etc/passwd', 'w+')
         fileShadow.write(users_tokens_str)
-     
-        fileShadow.close()
 
+        fileShadow.close()
         #fileShadow = open('/etc/passwd.teste')
-        #print(fileShadow.read())
+        # print(fileShadow.read())
+
+    # return a list of security questions
+    def get_listofQuestions(self):
+        file = open("questions.txt", "r")
+        questions = file.readlines()
+        return questions
 
     # Save a new user on shadow file. Recieves the line to add on /etc/shadow
-    def adduser_shadow(self,line):
+
+    def adduser_shadow(self, line):
         file = self.get_file_shadow()
         file.append(line)
         passwd = open('/etc/shadow', 'w+')
@@ -314,16 +320,27 @@ class Psswd:
                 break
         self.update_passwd(user_unlock)
         # print(user_unlock)
-        return 
+        return
 
-    
+    # esta varieavel possui todas as regras de senhas do adm
+    rules_pass = []
 
+    # def get_values_of_admin_password():
+    def values_pass(self, tamSenha, lower, upper, numero, simbolos):
+        self.rules_pass.append(tamSenha)
+        self.rules_pass.append(lower)
+        self.rules_pass.append(upper)
+        self.rules_pass.append(numero)
+        self.rules_pass.append(simbolos)
 
-
-
+    def get_value_pass(self):
+        return self.rules_pass
 
 
 if __name__ == "__main__":
     passwdng = Psswd()
-    passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
+
+    #passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
+    # passwdng.save_shadow2('usersemsenha:*:18089:0:99999:7:::\n')
+    passwdng.unlockUser('teste2')
 
