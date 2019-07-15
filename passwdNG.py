@@ -325,6 +325,5 @@ class Psswd:
 
 if __name__ == "__main__":
     passwdng = Psswd()
-    # passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
-    passwdng.create_new_user("gustavo", "123mudar", "Gustavo Rafael", "12312312", "gus@gus.com", "Gustavo", "1")
+    passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
 
