@@ -9,7 +9,7 @@ class SampleApp(tk.Tk):
     def __init__(self, psw):
         tk.Tk.__init__(self)
         self._frame = None
-        self.switch_frame(CreateUser, psw)
+        self.switch_frame(PainelAdm, psw)
 
     def switch_frame(self, frame_class, psw, data=None):
         new_frame = frame_class(self, psw, data)
@@ -350,6 +350,15 @@ class CreateUser(tk.Frame):
         setimoContainer = tk.Frame(self)
         setimoContainer.pack()
 
+        oitavoContainer = tk.Frame(self)
+        oitavoContainer.pack()
+
+        perguntaContainer = tk.Frame(self)
+        perguntaContainer.pack()
+
+        respostaContainer = tk.Frame(self)
+        respostaContainer.pack()
+
         self.titulo = tk.Label(titleContainer, text=" -- Create New User -- ")
         self.titulo["font"] = ("Arial", "15", "bold")
         self.titulo.pack()
@@ -400,6 +409,26 @@ class CreateUser(tk.Frame):
         self.tell = tk.Entry(phoneContainer, show="")
         self.tell["width"] = 30
         self.tell.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_pergunta = tk.Label(
+            perguntaContainer, text="Pergunta:", anchor="w")
+        self.lb_pergunta["width"] = 30
+        self.lb_pergunta["justify"] = tk.LEFT
+        self.lb_pergunta.pack(side=tk.LEFT, pady=5)
+
+        self.pergunta = tk.Entry(perguntaContainer, show="")
+        self.pergunta["width"] = 30
+        self.pergunta.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_resposta = tk.Label(
+            perguntaContainer, text="Resposta:", anchor="w")
+        self.lb_resposta["width"] = 30
+        self.lb_resposta["justify"] = tk.LEFT
+        self.lb_resposta.pack(side=tk.LEFT, pady=5)
+
+        self.resposta = tk.Entry(respostaContainer, show="")
+        self.resposta["width"] = 30
+        self.resposta.pack(side=tk.RIGHT, pady=5)
 
         self.lb_other = tk.Label(otherContainer, text="Other:", anchor="w")
         self.lb_other["width"] = 30
@@ -462,7 +491,7 @@ class CreateUser(tk.Frame):
         self.botao_Finish["width"] = 58
         self.botao_Finish.pack(side=tk.LEFT, pady=5)
 
-        self.lb_alert = tk.Label(setimoContainer)
+        self.lb_alert = tk.Label(oitavoContainer)
         self.lb_alert["text"] = ""
         self.lb_alert["font"] = ("Arial", "9", "bold")
         self.lb_alert.pack()
@@ -479,18 +508,238 @@ class CreateUser(tk.Frame):
             self.lb_date2.pack_forget()
             self.cal2.pack_forget()
 
+    def valid_password(self, password):
+        digit = re.search(r"\d", password)
+        uppercase = re.search(r"[A-Z]", password)
+        lowercase = re.search(r"[a-z]", password)
+        symbol = re.search(r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]', password)
+
+        print(str(len(str(password))), digit, uppercase, lowercase, symbol)
+        x = len(str(password))
+        print(len(str(password)))
+        if x < 6:
+            self.lb_alert["text"] = "Passwords should consist of 6 characters."
+            self.lb_alert["fg"] = "red"
+        if digit == None:
+            self.lb_alert["text"] = "Passwords should contain digits [0-9]."
+            self.lb_alert["fg"] = "red"
+        if uppercase == None:
+            self.lb_alert["text"] = "Passwords should contain upper case characters."
+            self.lb_alert["fg"] = "red"
+        if lowercase == None:
+            self.lb_alert["text"] = "Passwords should contain lower case characters."
+            self.lb_alert["fg"] = "red"
+        if symbol == None:
+            self.lb_alert["text"] = "Passwords should contain symbols."
+            self.lb_alert["fg"] = "red"
+
+        if (x > 6 and digit != None and uppercase != None and lowercase != None and symbol != None):
+            return (True)
+        else:
+            return (False)
+
     def get_data_new_user(self, username, pass1, pass2):
         if ((username and pass1 and pass2) != ""):
             if pass1 == pass2:
-                self.lb_alert["text"] = "The user was created."
-                self.lb_alert["fg"] = "green"
-                print(self.passwdNG.get_file_shadow())
+                if (self.valid_password(pass1)):
+                    self.lb_alert["text"] = "The user was created."
+                    self.lb_alert["fg"] = "green"
+                    print(self.passwdNG.get_file_shadow())
+
             else:
                 self.lb_alert["text"] = "The passwords do not match."
                 self.lb_alert["fg"] = "red"
         else:
             self.lb_alert["text"] = "Please fill in all fields."
             self.lb_alert["fg"] = "red"
+
+
+class GerenciarSenha(tk.Frame):
+    def __init__(self, master, passwdNG, data=None):
+        tk.Frame.__init__(self, master)
+        self.passwdNG = passwdNG
+
+        ###### DEFINE CONTAINER TITULO ######
+        titleContainer = tk.Frame(self)
+        titleContainer.pack()
+
+        ###### DEFINE CONTAINER Lower Case ######
+        lowerContainer = tk.Frame(self)
+        lowerContainer.pack()
+
+        ###### DEFINE CONTAINER Upper Case ######
+        upperContainer = tk.Frame(self)
+        upperContainer.pack()
+
+        ###### DEFINE CONTAINER qtd.number ######
+        qtdNumberContainer = tk.Frame(self)
+        qtdNumberContainer.pack()
+
+        ###### DEFINE CONTAINER qtd.simbolos ######
+        qtdSimbolosContainer = tk.Frame(self)
+        qtdSimbolosContainer.pack()
+
+        ###### DEFINE CONTAINER tamanho senha ######
+        tamanhoSenhaContainer = tk.Frame(self)
+        tamanhoSenhaContainer.pack()
+
+        alertContainer = tk.Frame(self)
+        alertContainer.pack()
+
+        ###### DEFINE CONTAINER voltar ######
+        voltar = tk.Frame(self)
+        voltar.pack()
+
+        self.titulo = tk.Label(titleContainer, text=" -- Gerenciar Senha -- ")
+        self.titulo["font"] = ("Arial", "15", "bold")
+        self.titulo.pack()
+
+        self.lb_lowerCase = tk.Label(
+            lowerContainer, text="Quantidade de caracteres minúsculos(a - z)", anchor="w")
+        self.lb_lowerCase["width"] = 50
+        self.lb_lowerCase["justify"] = tk.LEFT
+        self.lb_lowerCase.pack(side=tk.LEFT, pady=5)
+
+        self.qtdLower = tk.Entry(lowerContainer)
+        self.qtdLower["width"] = 10
+        self.qtdLower.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_upperCase = tk.Label(
+            upperContainer, text="Quantidade de caracteres maiusculos (A - Z)", anchor="w")
+        self.lb_upperCase["width"] = 50
+        self.lb_upperCase["justify"] = tk.LEFT
+        self.lb_upperCase.pack(side=tk.LEFT, pady=5)
+
+        self.qtdUpper = tk.Entry(upperContainer)
+        self.qtdUpper["width"] = 10
+        self.qtdUpper.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_qtdNumeros = tk.Label(
+            qtdNumberContainer, text="Quantidade de numeros(0 - 9)", anchor="w")
+        self.lb_qtdNumeros["width"] = 50
+        self.lb_qtdNumeros["justify"] = tk.LEFT
+        self.lb_qtdNumeros.pack(side=tk.LEFT, pady=5)
+
+        self.qtdNumeros = tk.Entry(qtdNumberContainer)
+        self.qtdNumeros["width"] = 10
+        self.qtdNumeros.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_qtdSimbolos = tk.Label(
+            qtdSimbolosContainer, text="Quantidade de simbolos (!@$-)(*&¨%)", anchor="w")
+        self.lb_qtdSimbolos["width"] = 50
+        self.lb_qtdSimbolos["justify"] = tk.LEFT
+        self.lb_qtdSimbolos.pack(side=tk.LEFT, pady=5)
+
+        self.qtdSimbolos = tk.Entry(qtdSimbolosContainer)
+        self.qtdSimbolos["width"] = 10
+        self.qtdSimbolos.pack(side=tk.RIGHT, pady=5)
+
+        self.lb_tamanhodaSenha = tk.Label(
+            tamanhoSenhaContainer, text="Tamanho da senha", anchor="w")
+        self.lb_tamanhodaSenha["width"] = 50
+        self.lb_tamanhodaSenha["justify"] = tk.LEFT
+        self.lb_tamanhodaSenha.pack(side=tk.LEFT, pady=5)
+
+        self.tamanhoSenha = tk.Entry(tamanhoSenhaContainer)
+        self.tamanhoSenha["width"] = 10
+        self.tamanhoSenha.pack(side=tk.RIGHT, pady=5)
+
+        self.btn_ok = tk.Button(
+            voltar, text="Concluir", command=lambda: self.funcao_ok(self.qtdLower.get(), self.qtdUpper.get(),
+                                                                    self.qtdNumeros.get(), self.qtdSimbolos.get(), self.tamanhoSenha.get()),)
+        self.btn_ok["width"] = 50
+        self.btn_ok.pack(side=tk.RIGHT)
+
+        self.botao_back = tk.Button(
+            voltar, text="<-", command=lambda: self.master.switch_frame(PainelAdm, self.passwdNG))
+        self.botao_back["width"] = 1
+        self.botao_back.pack(side=tk.RIGHT)
+
+        self.lb_alert = tk.Label(alertContainer)
+        self.lb_alert["text"] = ""
+        self.lb_alert["font"] = ("Arial", "9", "bold")
+        self.lb_alert.pack()
+
+    def funcao_ok(self, lower, upper, numero, simbolos, tamSenha):
+        if lower.isnumeric() and upper.isnumeric() and numero.isnumeric() and simbolos.isnumeric() and tamSenha.isnumeric():
+            self.lb_alert["text"] = "Sucess."
+            self.lb_alert["fg"] = "green"
+            # self.master.switch_frame(PainelAdm, self.passwdNG)
+        else:
+            self.lb_alert["text"] = "Just numbers."
+            self.lb_alert["fg"] = "red"
+
+    # def valid_password_2(self, password):
+    #     digit = re.search(r"\d", password)
+    #     uppercase = re.search(r"[A-Z]", password)
+    #     lowercase = re.search(r"[a-z]", password)
+    #     symbol = re.search(r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]', password)
+
+    #     print(str(len(str(password))), digit, uppercase, lowercase, symbol)
+    #     x = len(str(password))
+    #     print(len(str(password)))
+    #     if x < 6:
+    #         self.lb_alert["text"] = "Passwords should consist of 6 characters."
+    #         self.lb_alert["fg"] = "red"
+    #     if digit == None:
+    #         self.lb_alert["text"] = "Passwords should contain digits [0-9]."
+    #         self.lb_alert["fg"] = "red"
+    #     if uppercase == None:
+    #         self.lb_alert["text"] = "Passwords should contain upper case characters."
+    #         self.lb_alert["fg"] = "red"
+    #     if lowercase == None:
+    #         self.lb_alert["text"] = "Passwords should contain lower case characters."
+    #         self.lb_alert["fg"] = "red"
+    #     if symbol == None:
+    #         self.lb_alert["text"] = "Passwords should contain symbols."
+    #         self.lb_alert["fg"] = "red"
+
+    #     if (x > 6 and digit != None and uppercase != None and lowercase != None and symbol != None):
+    #         return (True)
+    #     else:
+    #         return (False)
+
+
+class PainelAdm(tk.Frame):
+    def __init__(self, master, passwdNG, data=None):
+        tk.Frame.__init__(self, master)
+        self.passwdNG = passwdNG
+
+        ###### DEFINE CONTAINER TITULO ######
+        titleContainer = tk.Frame(self)
+        titleContainer.pack()
+
+        ###### DEFINE CONTAINER linha Acoes ######
+        acaoContainer = tk.Frame(self)
+        acaoContainer.pack()
+
+        ###### DEFINE CONTAINER gerenciar senha ######
+        gerenciarsenha = tk.Frame(self)
+        gerenciarsenha.pack()
+
+        ###### DEFINE CONTAINER voltar ######
+        voltar = tk.Frame(self)
+        voltar.pack()
+
+        self.titulo = tk.Label(titleContainer, text=" -- Painel do ADM -- ")
+        self.titulo["font"] = ("Arial", "15", "bold")
+        self.titulo.pack()
+
+        self.lb_acao = tk.Label(acaoContainer, text="Ações", anchor="w")
+        self.lb_acao["width"] = 30
+        self.lb_acao["justify"] = tk.LEFT
+        self.lb_acao.pack(side=tk.LEFT, pady=5)
+
+        self.btn_gerenciarSenha = tk.Button(gerenciarsenha, text="Gerenciar Senha", command=lambda: master.switch_frame(
+            GerenciarSenha, passwdNG, ""))
+        self.btn_gerenciarSenha["width"] = 30
+        self.btn_gerenciarSenha["justify"] = tk.LEFT
+        self.btn_gerenciarSenha.pack(side=tk.LEFT, pady=5)
+
+        self.botao_back = tk.Button(
+            voltar, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
+        self.botao_back["width"] = 1
+        self.botao_back.pack(side=tk.LEFT)
 
 
 if __name__ == "__main__":
