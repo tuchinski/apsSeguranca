@@ -108,8 +108,8 @@ class Psswd:
         self.createNewGroupUser(username,str(the_last_biggest_ID))
 
         # cria o diretório home do usuário
-        os.system('mkdir /home/' + username)
-        # os.system('chwown /home/' + username + ' ' + username + ":" + username)
+        os.system('mkdir /home/' + username)        
+        os.system('chown ' +  username + ":" + username + ' /home/' + username )
         
 
 
