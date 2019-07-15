@@ -48,7 +48,7 @@ class Psswd:
                 maior = int(user[2]) 
         return maior
 
-    def create_new_user(self, username, password, fullname=None, tellphone=None, email=None, other=None, nivel_access=None):
+    def create_new_user(self, username, password, fullname=None, tellphone=None, email=None, other=None, nivel_access=None, security_question=None, security_asnwer=None):
         # Here, we have the line that goint to add in the file shadow
         randomsalt = ''.join(random.sample(string.ascii_letters,8))
         randomsalt = '$6$' + randomsalt + '$'
@@ -59,7 +59,7 @@ class Psswd:
 
         # Here, we have the line that goint to add in the file passwd
         the_last_biggest_ID = self.who_is_the_biggest_ID() + 1
-        comentarios = '['+ 'fullname:' + str(fullname) + ', tellphone:' + str(tellphone) + ', email:' + str(email) + ', other:' + str(other) + ']'
+        comentarios = '['+ 'fullname:' + str(fullname) + ', tellphone:' + str(tellphone) +', security_question:'+ str(security_question)+ 'security_answer'+ str(security_asnwer) + ', email:' + str(email) + ', other:' + str(other) + ']'
         line_passwd = username + ':x:' + str(the_last_biggest_ID) + ':' + str(the_last_biggest_ID) + ':' + comentarios + ':/home/' + username + ':/bin/bash'
         #print(line_passwd)
         # self.save_passwd(line_passwd)
@@ -149,7 +149,6 @@ class Psswd:
         # print(user)
         users_tokens = []
         users_tokens = self.get_tokens_by_user_passwd()
-        
         users_tokens_str = ''
         for i in users_tokens:
             users_tokens_str += ':'.join(i)
@@ -159,9 +158,18 @@ class Psswd:
         fileShadow.write(users_tokens_str)
      
         fileShadow.close()
-
         #fileShadow = open('/etc/passwd.teste')
         #print(fileShadow.read())
+
+    #return a list of security questions
+    def get_listofQuestions(self):
+        file = open("questions.txt", "r")
+        questions = file.readlines()
+        return questions
+      
+        
+
+        
 
     # Save a new user on shadow file. Recieves the line to add on /etc/shadow
     def adduser_shadow(self,line):
@@ -189,8 +197,6 @@ class Psswd:
         return 
 
     
-
-
 
 
 
