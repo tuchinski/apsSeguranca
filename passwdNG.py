@@ -2,6 +2,9 @@ import crypt
 import string
 import random
 from random import choice
+import datetime
+from datetime import date
+import os
 
 
 class Psswd:
@@ -24,6 +27,22 @@ class Psswd:
             users_passwd.append(line)
         return users_passwd
 
+    def get_file_group(self):
+        groups_info = []
+        fileGroupsInfo = open('/etc/group')
+        for line in fileGroupsInfo:
+            groups_info.append(line)
+        fileGroupsInfo.close()
+        return groups_info
+   
+    def get_file_gshadow(self):
+        groups_info = []
+        fileGroupsInfo = open('/etc/gshadow')
+        for line in fileGroupsInfo:
+            groups_info.append(line)
+        fileGroupsInfo.close()
+        return groups_info
+
     def get_tokens_by_user_shadow(self):
         list_users = self.get_file_shadow()
         list_users_tokens = []
@@ -41,6 +60,24 @@ class Psswd:
             tokens = users.split(':')
             list_users_tokens.append(tokens)
         return list_users_tokens
+    
+    def get_tokens_by_group_gshadow(self):
+        list_groups = self.get_file_gshadow()
+        list_groups_token = []
+        for groups in list_groups:
+            tokens = []
+            tokens = groups.split(':')
+            list_groups_token.append(tokens)
+        return list_groups_token
+
+    def get_tokens_by_group_group(self):
+        list_groups = self.get_file_group()
+        list_groups_token = []
+        for groups in list_groups:
+            tokens = []
+            tokens = groups.split(':')
+            list_groups_token.append(tokens)
+        return list_groups_token
 
     def who_is_the_biggest_ID(self):
         list_tokens = self.get_tokens_by_user_passwd()
@@ -52,21 +89,113 @@ class Psswd:
 
     def create_new_user(self, username, password, fullname=None, tellphone=None, email=None, other=None, nivel_access=None, security_question=None, security_asnwer=None):
         # Here, we have the line that goint to add in the file shadow
-        randomsalt = ''.join(random.sample(string.ascii_letters, 8))
-        randomsalt = '$6$' + randomsalt + '$'
-        line_shadow = crypt.crypt(password, randomsalt)
-        line_shadow = username + ':' + line_shadow
+
+        line_shadow = self.createShadowLineNewUsers(username,password)
+    
+
         # print(line_shadow)
         self.adduser_shadow(line_shadow)
 
         # Here, we have the line that goint to add in the file passwd
         the_last_biggest_ID = self.who_is_the_biggest_ID() + 1
-        comentarios = '[' + 'fullname:' + str(fullname) + ', tellphone:' + str(tellphone) + ', security_question:' + str(
-            security_question) + 'security_answer' + str(security_asnwer) + ', email:' + str(email) + ', other:' + str(other) + ']'
-        line_passwd = username + ':x:' + str(the_last_biggest_ID) + ':' + str(
-            the_last_biggest_ID) + ':' + comentarios + ':/home/' + username + ':/bin/bash'
+        # comentarios = '['+ 'fullname:' + str(fullname) + ', tellphone:' + str(tellphone) + ', email:' + str(email) + ', other:' + str(other) + ']'
+        comentarios = str(fullname) + "," + str(tellphone) + "," +  str(email) + "," + str(other) 
+        line_passwd = username + ':x:' + str(the_last_biggest_ID) + ':' + str(the_last_biggest_ID) + ':' + comentarios + ':/home/' + username + ':/bin/bash'
         # print(line_passwd)
-        # self.save_passwd(line_passwd)
+        self.save_passwd(line_passwd)
+
+        # cria um grupo para o novo usuário
+        self.createNewGroupUser(username,str(the_last_biggest_ID))
+
+        # cria o diretório home do usuário
+        os.system('mkdir /home/' + username)
+        # os.system('chwown /home/' + username + ' ' + username + ":" + username)
+        
+
+
+    # cria a linha que deverá ser inserida no arquivo /etc/shadow quando um novo usuário for criado
+    def createShadowLineNewUsers(self, user, password):
+        line_shadow = ''
+        
+        #--------------------------------------Usuário ---------------------------------------
+        line_shadow = user 
+        #-------------------------------------------------------------------------------------
+
+        #--------------------------------------Senha -----------------------------------------
+        #Cria o salt
+        randomsalt = ''.join(random.sample(string.ascii_letters,8))
+        randomsalt = '$6$' + randomsalt + '$'
+        line_shadow = line_shadow + ":" + crypt.crypt(password, randomsalt)
+        #-------------------------------------------------------------------------------------
+
+        #---------------------------- Ultima mudança de senha --------------------------------
+        #Data base que o Linux usa 
+        baseDate = datetime.date(1970,1,1)
+        #Pega o dia atual
+        today = date.today()    
+        # Calcula a diferença de dias entre o dia de hoje e a data base
+        dateLastModPassword = abs((today-baseDate).days)
+        # Recebe a data da ultima modficação de senha(neste caso recebe o dia atual)
+        line_shadow = line_shadow + ":" + str(dateLastModPassword)
+        #-------------------------------------------------------------------------------------
+
+        #-------------------Dias até que a senha possa ser alterada novamente ----------------
+        # O padrão é 0
+        line_shadow = line_shadow + ":" + str(0)
+        #-------------------------------------------------------------------------------------
+
+        #-------------------Dias antes que uma alteração seja necessária ---------------------
+        # Caso deseje que o usuário mude a senha após o login, colocar 0
+        line_shadow = line_shadow + ":" + str(999999)
+        #-------------------------------------------------------------------------------------
+        
+        #-------------------Dias de avisos antes da expiração da senha -----------------------
+        # Caso a senha do usuário tenha data de expiração, define quantos dias antes o usuário
+        # será avisado
+        line_shadow = line_shadow + ":" + str(7)
+        #-------------------------------------------------------------------------------------
+        
+        #-------------------Dias entre expiração e desativação -------------------------------
+        # Os dias em que a conta expirada vai ficar inativa
+        line_shadow = line_shadow + ":" 
+        #-------------------------------------------------------------------------------------
+
+        #-------------------Data em que a conta vai expirar ----------------------------------
+        # Os dias em que a conta expirada vai ficar inativa
+        line_shadow = line_shadow + ":"  
+        #-------------------------------------------------------------------------------------
+
+        #-------------------flag especial ----------------------------------------------------
+        # Os dias em que a conta expirada vai ficar inativa
+        line_shadow = line_shadow + ":\n"  
+        #-------------------------------------------------------------------------------------
+
+        return line_shadow
+
+    def createNewGroupUser(self, user, uid):
+        # linha nova do /etc/group
+        fileLines = self.get_file_group()
+        fileLines.append(user + ":x:" + uid +":\n")
+        newString_group = ''.join(fileLines)        
+        
+        # linha nova do /etc/gshadow
+        fileLines = self.get_file_gshadow()
+        fileLines.append(user + ":!::\n")
+        newString_gshadow = ''.join(fileLines)
+        
+        # print(newString_group)
+        # print(newString_gshadow)
+
+        # Escreve no arquivo /etc/group
+        fileGroups = open('/etc/group',"w+")
+        fileGroups.write(newString_group)
+        fileGroups.close()
+
+        # escreve no arquivo /etc/gshadow
+        file_gshadow = open('/etc/gshadow',"w+")
+        file_gshadow.write(newString_gshadow)
+        file_gshadow.close()
+
 
     def createPassword(self):
         userName = input('Digite o nome do usuário:')
@@ -153,8 +282,8 @@ class Psswd:
         for i in users_tokens:
             users_tokens_str += ':'.join(i)
 
-        users_tokens_str += user
-        fileShadow = open('/etc/passwd.teste', 'w+')
+        users_tokens_str += user + '\n'
+        fileShadow = open('/etc/passwd', 'w+')
         fileShadow.write(users_tokens_str)
 
         fileShadow.close()
@@ -172,7 +301,7 @@ class Psswd:
     def adduser_shadow(self, line):
         file = self.get_file_shadow()
         file.append(line)
-        passwd = open('/etc/shadow.teste', 'w+')
+        passwd = open('/etc/shadow', 'w+')
 
         string_to_save = ''.join(file)
         passwd.write(string_to_save)
@@ -210,6 +339,8 @@ class Psswd:
 
 if __name__ == "__main__":
     passwdng = Psswd()
+
     #passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
     # passwdng.save_shadow2('usersemsenha:*:18089:0:99999:7:::\n')
     passwdng.unlockUser('teste2')
+
