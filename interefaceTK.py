@@ -269,10 +269,14 @@ class EditPass(tk.Frame):
             self.lb_alert["fg"] = "red"
 
     def valid_password(self, password):
+        # rules_password = self.passwdNG.get_value_pass()
+        # tamanho = rules_password[0]
+
         digit = re.search(r"\d", password)
         uppercase = re.search(r"[A-Z]", password)
         lowercase = re.search(r"[a-z]", password)
-        symbol = re.search(r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]', password)
+        symbol = re.search(
+            r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]', password)
 
         print(str(len(str(password))), digit, uppercase, lowercase, symbol)
         print(len(str(password)))
@@ -335,6 +339,12 @@ class CreateUser(tk.Frame):
         quartoContainer = tk.Frame(self)
         quartoContainer.pack()
 
+        perguntaContainer = tk.Frame(self)
+        perguntaContainer.pack()
+
+        respostaContainer = tk.Frame(self)
+        respostaContainer.pack()
+
         ###### DEFINE CONTAINER Other ######
         otherContainer = tk.Frame(self)
         otherContainer.pack()
@@ -352,12 +362,6 @@ class CreateUser(tk.Frame):
 
         oitavoContainer = tk.Frame(self)
         oitavoContainer.pack()
-
-        perguntaContainer = tk.Frame(self)
-        perguntaContainer.pack()
-
-        respostaContainer = tk.Frame(self)
-        respostaContainer.pack()
 
         self.titulo = tk.Label(titleContainer, text=" -- Create New User -- ")
         self.titulo["font"] = ("Arial", "15", "bold")
@@ -410,18 +414,34 @@ class CreateUser(tk.Frame):
         self.tell["width"] = 30
         self.tell.pack(side=tk.RIGHT, pady=5)
 
-        self.lb_pergunta = tk.Label(
-            perguntaContainer, text="Pergunta:", anchor="w")
-        self.lb_pergunta["width"] = 30
-        self.lb_pergunta["justify"] = tk.LEFT
-        self.lb_pergunta.pack(side=tk.LEFT, pady=5)
+        self.questions = ["Qual o nome do seu primeiro animal de estimação?",
+                          "Qual sua comida favorita ?",
+                          "Qual o nome do seu melhor amigo de infancia?",
+                          "Qual o nome da sua professora favorita ?",
+                          "Em que cidade voce nasceu ?",
+                          "Qual sua série favorita ?",
+                          "Onde sua mão nasceu ?",
+                          "Onde seu pai nasceu ?"
+                          ]
+        # self.variable = 'Escreva uma pergunta'
 
-        self.pergunta = tk.Entry(perguntaContainer, show="")
-        self.pergunta["width"] = 30
-        self.pergunta.pack(side=tk.RIGHT, pady=5)
+        self.lb_pergunta0 = tk.Label(
+            perguntaContainer, text="Pergunta:", anchor="w")
+        self.lb_pergunta0["width"] = 10
+        self.lb_pergunta0["justify"] = tk.LEFT
+        self.lb_pergunta0.pack(side=tk.LEFT, pady=5)
+        self.variable = tk.StringVar(perguntaContainer)
+
+        self.variable.set(self.questions[1])  # default value
+
+        self.lb_pergunta = tk.OptionMenu(
+            perguntaContainer, self.variable, *self.questions)
+        self.lb_pergunta["width"] = 40
+        self.lb_pergunta["justify"] = tk.RIGHT
+        self.lb_pergunta.pack(side=tk.RIGHT, pady=5)
 
         self.lb_resposta = tk.Label(
-            perguntaContainer, text="Resposta:", anchor="w")
+            respostaContainer, text="Resposta:", anchor="w")
         self.lb_resposta["width"] = 30
         self.lb_resposta["justify"] = tk.LEFT
         self.lb_resposta.pack(side=tk.LEFT, pady=5)
@@ -509,11 +529,14 @@ class CreateUser(tk.Frame):
             self.cal2.pack_forget()
 
     def valid_password(self, password):
-        digit = re.search(r"\d", password)
-        uppercase = re.search(r"[A-Z]", password)
-        lowercase = re.search(r"[a-z]", password)
-        symbol = re.search(r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]', password)
+        rules_password = self.passwdNG.get_value_pass()
+        # tamanho = rules_password[0]
 
+        digit = re.search(r"\d{str(rules_password[0])}", password)
+        uppercase = re.search(r"[A-Z]{rules_password[1]}", password)
+        lowercase = re.search(r"[a-z]{rules_password[2]}", password)
+        symbol = re.search(
+            r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]{rules_password[3]}', password)
         print(str(len(str(password))), digit, uppercase, lowercase, symbol)
         x = len(str(password))
         print(len(str(password)))
@@ -664,37 +687,56 @@ class GerenciarSenha(tk.Frame):
         if lower.isnumeric() and upper.isnumeric() and numero.isnumeric() and simbolos.isnumeric() and tamSenha.isnumeric():
             self.lb_alert["text"] = "Sucess."
             self.lb_alert["fg"] = "green"
+            self.passwdNG.values_pass(self.tamanhoSenha.get(), self.qtdLower.get(
+            ), self.qtdUpper.get(), self.qtdNumeros.get(), self.qtdSimbolos.get())
             # self.master.switch_frame(PainelAdm, self.passwdNG)
         else:
             self.lb_alert["text"] = "Just numbers."
             self.lb_alert["fg"] = "red"
 
-    # def valid_password_2(self, password):
+    # def valid_password_2(self, password, lower, upper, numeros, simbols, tam):
     #     digit = re.search(r"\d", password)
-    #     uppercase = re.search(r"[A-Z]", password)
-    #     lowercase = re.search(r"[a-z]", password)
-    #     symbol = re.search(r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]', password)
+    #     uppercase = re.search(r"[A-Z]{3}", password)
+    #     lowercase = re.search(r"[a-z]{3}", password)
+    #     symbol = re.search(
+    #         r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]{3}', password)
 
     #     print(str(len(str(password))), digit, uppercase, lowercase, symbol)
-    #     x = len(str(password))
     #     print(len(str(password)))
-    #     if x < 6:
-    #         self.lb_alert["text"] = "Passwords should consist of 6 characters."
+    #     if len(str(password)) < tam:
+    #         self.lb_alert["text"] = "Passwords should consist of" + \
+    #             tam + " characters."
     #         self.lb_alert["fg"] = "red"
     #     if digit == None:
     #         self.lb_alert["text"] = "Passwords should contain digits [0-9]."
     #         self.lb_alert["fg"] = "red"
+    #     if len(digit) < numeros:
+    #         self.lb_alert["text"] = "Passwords should contain" + \
+    #             numeros + " digits [0-9]."
+    #         self.lb_alert["fg"] = "red"
     #     if uppercase == None:
     #         self.lb_alert["text"] = "Passwords should contain upper case characters."
+    #         self.lb_alert["fg"] = "red"
+    #     if len(uppercase) < upper:
+    #         self.lb_alert["text"] = "Passwords should contain" + \
+    #             upper + " upper case characters."
     #         self.lb_alert["fg"] = "red"
     #     if lowercase == None:
     #         self.lb_alert["text"] = "Passwords should contain lower case characters."
     #         self.lb_alert["fg"] = "red"
+    #     if len(lowercase) < lower:
+    #         self.lb_alert["text"] = "Passwords should contain" + \
+    #             lower + " lower case characters."
+    #         self.lb_alert["fg"] = "red"
     #     if symbol == None:
     #         self.lb_alert["text"] = "Passwords should contain symbols."
     #         self.lb_alert["fg"] = "red"
+    #     if len(symbol) < simbols:
+    #         self.lb_alert["text"] = "Passwords should contain" + \
+    #             simbols + " symbols."
+    #         self.lb_alert["fg"] = "red"
 
-    #     if (x > 6 and digit != None and uppercase != None and lowercase != None and symbol != None):
+    #     if (digit != None and uppercase != None and lowercase != None and symbol != None):
     #         return (True)
     #     else:
     #         return (False)
