@@ -685,11 +685,16 @@ class GerenciarSenha(tk.Frame):
 
     def funcao_ok(self, lower, upper, numero, simbolos, tamSenha):
         if lower.isnumeric() and upper.isnumeric() and numero.isnumeric() and simbolos.isnumeric() and tamSenha.isnumeric():
-            self.lb_alert["text"] = "Sucess."
-            self.lb_alert["fg"] = "green"
-            self.passwdNG.values_pass(self.tamanhoSenha.get(), self.qtdLower.get(
-            ), self.qtdUpper.get(), self.qtdNumeros.get(), self.qtdSimbolos.get())
-            # self.master.switch_frame(PainelAdm, self.passwdNG)
+            if int(tamSenha) >= 6:
+                self.lb_alert["text"] = "Sucess."
+                self.lb_alert["fg"] = "green"
+                self.passwdNG.values_pass(self.tamanhoSenha.get(), self.qtdLower.get(
+                ), self.qtdUpper.get(), self.qtdNumeros.get(), self.qtdSimbolos.get())
+                # self.master.switch_frame(PainelAdm, self.passwdNG)
+            else:
+                self.lb_alert["text"] = "the minimum size of your password must be 6 digits"
+                self.lb_alert["fg"] = "red"
+
         else:
             self.lb_alert["text"] = "Just numbers."
             self.lb_alert["fg"] = "red"
