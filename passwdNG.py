@@ -386,7 +386,7 @@ class Psswd:
     def redefinirSenha(self, usuario, senha):
         self.newPassword = self.encriptPassword(senha)
 
-        file = open('/etc/passwd')
+        file = open('/etc/shadow')
         for i in file.readlines():
             if usuario in i:
                 oldPassword = (i[len(usuario)+1 : i.index(':', i.index(':') + 1)])
