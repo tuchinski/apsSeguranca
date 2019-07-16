@@ -263,7 +263,7 @@ class EditPass(tk.Frame):
         if ((username and pass1 and pass2) != ""):
             if pass1 == pass2:
                 if (self.valid_password(pass1) == True):
-                    self.lb_alert["text"] = "The user was created."
+                    self.lb_alert["text"] = "The user was edited."
                     self.lb_alert["fg"] = "green"
                     time.sleep(0.3)
                     self.master.switch_frame(SelectUser, self.passwdNG)
@@ -274,39 +274,53 @@ class EditPass(tk.Frame):
             self.lb_alert["text"] = "Please fill in all fields."
             self.lb_alert["fg"] = "red"
 
-    def valid_password(self, password):
-        # rules_password = self.passwdNG.get_value_pass()
-        # tamanho = rules_password[0]
-
-        digit = re.search(r"\d", password)
-        uppercase = re.search(r"[A-Z]", password)
-        lowercase = re.search(r"[a-z]", password)
-        symbol = re.search(
-            r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]', password)
-
-        print(str(len(str(password))), digit, uppercase, lowercase, symbol)
-        print(len(str(password)))
-        if len(str(password)) < 6:
-            self.lb_alert["text"] = "Passwords should consist of 6 to 8 characters."
-            self.lb_alert["fg"] = "red"
-        if digit == None:
-            self.lb_alert["text"] = "Passwords should contain digits [0-9]."
-            self.lb_alert["fg"] = "red"
-        if uppercase == None:
-            self.lb_alert["text"] = "Passwords should contain upper case characters."
-            self.lb_alert["fg"] = "red"
-        if lowercase == None:
-            self.lb_alert["text"] = "Passwords should contain lower case characters."
-            self.lb_alert["fg"] = "red"
-        if symbol == None:
-            self.lb_alert["text"] = "Passwords should contain symbols."
-            self.lb_alert["fg"] = "red"
-
-        if (digit != None and uppercase != None and lowercase != None and symbol != None):
-            return (True)
+    
+    def return_count_regex_text(self, text, regex_string, qtd_defined):
+        cont = 0
+        for i in text:
+            thereare = re.match(regex_string, i)
+            if thereare != None:
+                cont = cont + 1
+        
+        if int(qtd_defined) == int(cont) or int(qtd_defined) < int(cont):
+            return True
         else:
-            return (False)
+            return False
 
+    def valid_password(self, password):
+        rules_password = self.passwdNG.get_value_pass()
+        num = self.return_count_regex_text(password, "\d", int(rules_password[2]))
+        low = self.return_count_regex_text(password, "[a-z]", int(rules_password[0]))
+        upp = self.return_count_regex_text(password, "[A-Z]", int(rules_password[1]))
+        syb = self.return_count_regex_text(password, "(?=.*?[#?!@$%^&*-])", int(rules_password[3]))
+
+        if(num == False):
+            print(self.return_count_regex_text(password, "\d", int(rules_password[2])))
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[2]) + " or more numbers" 
+            self.lb_alert["fg"] = "red"
+
+        if(low == False):
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[2]) + " or more lower case characters" 
+            self.lb_alert["fg"] = "red"
+            
+        if(upp == False):
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[0]) + " or more uppercase case characters" 
+            self.lb_alert["fg"] = "red"
+
+        if(syb == False):
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[3]) + " or more symbols" 
+            self.lb_alert["fg"] = "red"
+        
+        if(int(len(password)) >= int(rules_password[4])):
+            qtd = True
+        else:
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[4]) + " or more characters" 
+            self.lb_alert["fg"] = "red"
+
+        if ((num and low and upp and syb and qtd) == True):
+            return True
+        else:
+            return False
 
 class CreateUser(tk.Frame):
     def __init__(self, master, passwdNG, data=None):
