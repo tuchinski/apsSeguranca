@@ -6,10 +6,10 @@ Software que substitui o comando passwd do Linux. O comando passwd é o comando 
 
 You need to have the following packages installed: 
 ## Python 3: 
- # $ sudo apt-get update
- # $ sudo apt-get install python3
- # $ sudo apt install python3-pip
- # $ pip3 install tkcalendar
+ ### $ sudo apt-get update
+ ### $ sudo apt-get install python3
+ ### $ sudo apt install python3-pip
+ ### $ pip3 install tkcalendar
 
 Para executar o programa você precisa escrever os seguintes comandos:
 
