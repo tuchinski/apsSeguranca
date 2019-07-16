@@ -92,10 +92,11 @@ class Psswd:
                 maior = int(user[2])
         return maior
 
-    def create_new_user(self, username, password, fullname=None, tellphone=None, email=None, other=None, nivel_access=None, security_question=None, security_asnwer=None):
+    # Recieve new user data and a date to expire the account, if necessary
+    def create_new_user(self, username, password, fullname=None, tellphone=None, email=None, other=None, nivel_access=None, security_question=None, security_asnwer=None,expirationDate =None):
         # Here, we have the line that goint to add in the file shadow
 
-        line_shadow = self.createShadowLineNewUsers(username,password)
+        line_shadow = self.createShadowLineNewUsers(username,password,expirationDate)
     
 
         # print(line_shadow)
@@ -119,7 +120,8 @@ class Psswd:
 
 
     # cria a linha que deverá ser inserida no arquivo /etc/shadow quando um novo usuário for criado
-    def createShadowLineNewUsers(self, user, password):
+    def createShadowLineNewUsers(self, user, password,expirationDate = None):
+
         line_shadow = ''
         
         #--------------------------------------Usuário ---------------------------------------
@@ -167,7 +169,13 @@ class Psswd:
 
         #-------------------Data em que a conta vai expirar ----------------------------------
         # Os dias em que a conta expirada vai ficar inativa
-        line_shadow = line_shadow + ":"  
+        if(expirationDate == None):
+            line_shadow = line_shadow + ":" 
+        else:
+            dateExpiration = abs((expirationDate-baseDate).days)
+            line_shadow = line_shadow + ":" + str(dateExpiration)
+        
+
         #-------------------------------------------------------------------------------------
 
         #-------------------flag especial ----------------------------------------------------
@@ -221,7 +229,7 @@ class Psswd:
 
         user_change = "false"
         # print(encriptedPassword)
-        fileShadow = open('/etc/shadow.def')
+        fileShadow = open('/etc/shadow')
         conteudo = fileShadow.readlines()
         fileShadowRead = fileShadow.read().split()
         for line in fileShadowRead:
@@ -270,7 +278,7 @@ class Psswd:
         for i in users_tokens:
             users_tokens_str += ':'.join(i)
 
-        fileShadow = open('/etc/passwd.teste', 'w+')
+        fileShadow = open('/etc/passwd', 'w+')
         fileShadow.write(users_tokens_str)
 
         fileShadow.close()
@@ -288,11 +296,11 @@ class Psswd:
             users_tokens_str += ':'.join(i)
 
         users_tokens_str += user + '\n'
-        fileShadow = open('/etc/passwd', 'w+')
+        # fileShadow = open('/etc/passwd', 'w+')
+        fileShadow = open('/etc/passwd',"w+")
         fileShadow.write(users_tokens_str)
 
         fileShadow.close()
-        #fileShadow = open('/etc/passwd.teste')
         # print(fileShadow.read())
 
     # return a list of security questions
@@ -412,7 +420,9 @@ class Psswd:
 if __name__ == "__main__":
     passwdng = Psswd()
 
-    # passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
+    dia = datetime.date(2019,7,18)
+
+    passwdng.create_new_user("7891", "123mudar", "7891", "7891", "7891", "User to study", "1",expirationDate=dia)
     # passwdng.save_shadow2('usersemsenha:*:18089:0:99999:7:::\n')
     # passwdng.unlockUser('teste2')
 
