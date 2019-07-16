@@ -81,10 +81,11 @@ class SelectUser(tk.Frame):
         if self.data == "blockUser":
             print("blockUser")
             print(username)
-            self.passwdNG.blockUser(str(username))
+            self.passwdNG.blockUser(username)
         elif self.data == "changePass":
             print("changePass")
             print(username)
+            self.master.switch_frame(EditPass, self.passwdNG, username)
         elif self.data == "recoverPass":
             print("recoverPass")
             print(username)
@@ -267,7 +268,7 @@ class EditPass(tk.Frame):
     def __init__(self, master, passwdNG, data=None):
         tk.Frame.__init__(self, master)
         self.passwdNG = passwdNG
-
+        self.data = data
         ###### DEFINE CONTAINER 00 ######
         titleContainer = tk.Frame(self)
         titleContainer.pack()
@@ -338,14 +339,14 @@ class EditPass(tk.Frame):
         self.lb_alert["font"] = ("Arial", "9", "bold")
         self.lb_alert.pack()
 
-    def get_data_edit_user(self, username, pass1, pass2):
-        if ((username and pass1 and pass2) != ""):
+    def get_data_edit_user(self, current_pass, pass1, pass2):
+        if ((current_pass and pass1 and pass2) != ""):
             if pass1 == pass2:
                 if (self.valid_password(pass1) == True):
                     self.lb_alert["text"] = "The user was edited."
                     self.lb_alert["fg"] = "green"
                     time.sleep(0.3)
-                    self.master.switch_frame(SelectUser, self.passwdNG)
+                    self.passwdNG.redefinirSenha(data, pass1)
             else:
                 self.lb_alert["text"] = "The passwords do not match."
                 self.lb_alert["fg"] = "red"
