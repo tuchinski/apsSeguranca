@@ -16,8 +16,9 @@ Pedro Perozin</p>
 Allison Sampaio</p>
 Rafael Menezes
 
-Foi implementado as funções básicas do passwd do Linux, como por exemplo, a criação de um usuário com senha, apagar a senha de determinado usuário, travar a senha e destravar a senha do mesmo.
 
-Temos um painel de Adminitrador, onde ele pode determinar a quantidade de letras maiusculas, letras minusculas a quantidade de símbolos e de números da senha do usuário. Ele pode também escolher um período em que a senha do usuário será válida. 
+The basic functions of Linux passwd have been implemented, such as creating a user with a password, erasing a user's password, locking the password and unlocking the user's password.
 
-Todas essas funcionalidades são feitas pela biblioteca Tkinter,que é onde se faz interfaces gráficas em Python.
+We have a Admin panel, where it can determine the amount of capital letters, lowercase letters the number of symbols and numbers of the user's password. It can also choose a period in which the user's password will be valid.
+
+All these features are made by the Tkinter library, which is where graphical interfaces are made in Python.
