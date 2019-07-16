@@ -9,7 +9,7 @@ class SampleApp(tk.Tk):
     def __init__(self, psw):
         tk.Tk.__init__(self)
         self._frame = None
-        self.switch_frame(GerenciarSenha, psw)
+        self.switch_frame(Login, psw)
 
     def switch_frame(self, frame_class, psw, data=None):
         new_frame = frame_class(self, psw, data)
@@ -25,6 +25,7 @@ class SelectUser(tk.Frame):
     def __init__(self, master, passwdNG, data=None):
         tk.Frame.__init__(self, master)
         self.passwdNG = passwdNG
+        self.data = data
 
         ###### DEFINE CONTAINER 00 ######
         titleContainer = tk.Frame(self)
@@ -41,6 +42,10 @@ class SelectUser(tk.Frame):
         ###### DEFINE CONTAINER 03 ######
         terceiroContainer = tk.Frame(self)
         terceiroContainer.pack()
+
+        ###### DEFINE CONTAINER 04 ######
+        buttonContainer = tk.Frame(self)
+        buttonContainer.pack()
 
         self.titulo = tk.Label(titleContainer, text=" -- USERS -- ")
         self.titulo["font"] = ("Arial", "15", "bold")
@@ -62,15 +67,31 @@ class SelectUser(tk.Frame):
 
         self.listbox.pack(side=tk.LEFT, pady=5, padx=1)
 
-        self.bottao_select = tk.Button(terceiroContainer, text="SELECT", command=lambda: master.switch_frame(
-            EditPass, passwdNG, str(self.listbox.get(tk.ANCHOR))))
-        self.bottao_select["width"] = 5
-        self.bottao_select["height"] = 10
-        self.bottao_select.pack(side=tk.RIGHT, pady=5, padx=1)
+        self.botao_back = tk.Button(
+            buttonContainer, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
+        self.botao_back["width"] = 1
+        self.botao_back.pack(side=tk.LEFT)
+
+        self.botao_Finish = tk.Button(buttonContainer, command=lambda: self.selectUser(self.listbox.get(tk.ANCHOR)))
+        self.botao_Finish["text"] = "SELECT"
+        self.botao_Finish["width"] = 58
+        self.botao_Finish.pack(side=tk.RIGHT, pady=5)
 
     def selectUser(self, username):
-        print(username)
-
+        if self.data == "blockUser":
+            print("blockUser")
+            print(username)
+            self.passwdNG.blockUser(str(username))
+        elif self.data == "changePass":
+            print("changePass")
+            print(username)
+        elif self.data == "recoverPass":
+            print("recoverPass")
+            print(username)
+        elif self.data == "unlockUser":
+            print("unlockUser")
+            print(username)
+            self.passwdNG.unlockUser(username)
 
 class Login(tk.Frame):
     def __init__(self, master, passwdNG, data=None):
@@ -166,24 +187,36 @@ class Painel(tk.Frame):
         self.botao_create_user.pack(pady=5)
 
         self.botao_change_pass_user = tk.Button(
-            primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG))
+            primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG, "changePass"))
         self.botao_change_pass_user["text"] = "Change Pass User"
         self.botao_change_pass_user["width"] = 58
         self.botao_change_pass_user.pack(pady=5)
 
         self.botao_change_pass_user = tk.Button(
-            primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG))
+            primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG, "recoverPass"))
         self.botao_change_pass_user["text"] = "Recover Password"
         self.botao_change_pass_user["width"] = 58
         self.botao_change_pass_user.pack(pady=5)
 
         self.botao_adm_paienl = tk.Button(
-            primeiroContainer, command=lambda: master.switch_frame(PainelAdm, passwdNG))
-        self.botao_adm_paienl["text"] = "Adm Painel"
+            primeiroContainer, command=lambda: master.switch_frame(GerenciarSenha, passwdNG))
+        self.botao_adm_paienl["text"] = "Manage Passwords"
         self.botao_adm_paienl["width"] = 58
         self.botao_adm_paienl.pack(pady=5)
 
+        self.botao_adm_paienl = tk.Button(
+            primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG, "blockUser"))
+        self.botao_adm_paienl["text"] = "Block User"
+        self.botao_adm_paienl["width"] = 58
+        self.botao_adm_paienl.pack(pady=5)
 
+        self.botao_adm_paienl = tk.Button(
+            primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG, "unlockUser"))
+        self.botao_adm_paienl["text"] = "Unlock User"
+        self.botao_adm_paienl["width"] = 58
+        self.botao_adm_paienl.pack(pady=5)
+
+ 
 class EditPass(tk.Frame):
     def __init__(self, master, passwdNG, data=None):
         tk.Frame.__init__(self, master)
@@ -598,8 +631,7 @@ class CreateUser(tk.Frame):
                 if (self.valid_password(pass1)):
                     self.lb_alert["text"] = "The user was created."
                     self.lb_alert["fg"] = "green"
-                    print(self.passwdNG.get_file_shadow())
-
+                    self.passwdNG.create_new_user(username, pass1, name, tell, email, other, "1", var1, res)
             else:
                 self.lb_alert["text"] = "The passwords do not match."
                 self.lb_alert["fg"] = "red"
@@ -705,8 +737,9 @@ class GerenciarSenha(tk.Frame):
         self.btn_ok.pack(side=tk.RIGHT)
 
         self.botao_back = tk.Button(
-            voltar, text="<-", command=lambda: self.master.switch_frame(PainelAdm, self.passwdNG))
+            voltar, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
         self.botao_back["width"] = 1
+        self.botao_back["width"] = 10
         self.botao_back.pack(side=tk.RIGHT)
 
         self.lb_alert = tk.Label(alertContainer)
@@ -728,94 +761,47 @@ class GerenciarSenha(tk.Frame):
             self.lb_alert["text"] = "Just numbers."
             self.lb_alert["fg"] = "red"
 
-    # def valid_password_2(self, password, lower, upper, numeros, simbols, tam):
-    #     digit = re.search(r"\d", password)
-    #     uppercase = re.search(r"[A-Z]{3}", password)
-    #     lowercase = re.search(r"[a-z]{3}", password)
-    #     symbol = re.search(
-    #         r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]{3}', password)
 
-    #     print(str(len(str(password))), digit, uppercase, lowercase, symbol)
-    #     print(len(str(password)))
-    #     if len(str(password)) < tam:
-    #         self.lb_alert["text"] = "Passwords should consist of" + \
-    #             tam + " characters."
-    #         self.lb_alert["fg"] = "red"
-    #     if digit == None:
-    #         self.lb_alert["text"] = "Passwords should contain digits [0-9]."
-    #         self.lb_alert["fg"] = "red"
-    #     if len(digit) < numeros:
-    #         self.lb_alert["text"] = "Passwords should contain" + \
-    #             numeros + " digits [0-9]."
-    #         self.lb_alert["fg"] = "red"
-    #     if uppercase == None:
-    #         self.lb_alert["text"] = "Passwords should contain upper case characters."
-    #         self.lb_alert["fg"] = "red"
-    #     if len(uppercase) < upper:
-    #         self.lb_alert["text"] = "Passwords should contain" + \
-    #             upper + " upper case characters."
-    #         self.lb_alert["fg"] = "red"
-    #     if lowercase == None:
-    #         self.lb_alert["text"] = "Passwords should contain lower case characters."
-    #         self.lb_alert["fg"] = "red"
-    #     if len(lowercase) < lower:
-    #         self.lb_alert["text"] = "Passwords should contain" + \
-    #             lower + " lower case characters."
-    #         self.lb_alert["fg"] = "red"
-    #     if symbol == None:
-    #         self.lb_alert["text"] = "Passwords should contain symbols."
-    #         self.lb_alert["fg"] = "red"
-    #     if len(symbol) < simbols:
-    #         self.lb_alert["text"] = "Passwords should contain" + \
-    #             simbols + " symbols."
-    #         self.lb_alert["fg"] = "red"
+# class PainelAdm(tk.Frame):
+#     def __init__(self, master, passwdNG, data=None):
+#         tk.Frame.__init__(self, master)
+#         self.passwdNG = passwdNG
 
-    #     if (digit != None and uppercase != None and lowercase != None and symbol != None):
-    #         return (True)
-    #     else:
-    #         return (False)
+#         ###### DEFINE CONTAINER TITULO ######
+#         titleContainer = tk.Frame(self)
+#         titleContainer.pack()
 
+#         ###### DEFINE CONTAINER linha Acoes ######
+#         acaoContainer = tk.Frame(self)
+#         acaoContainer.pack()
 
-class PainelAdm(tk.Frame):
-    def __init__(self, master, passwdNG, data=None):
-        tk.Frame.__init__(self, master)
-        self.passwdNG = passwdNG
+#         ###### DEFINE CONTAINER gerenciar senha ######
+#         gerenciarsenha = tk.Frame(self)
+#         gerenciarsenha.pack()
 
-        ###### DEFINE CONTAINER TITULO ######
-        titleContainer = tk.Frame(self)
-        titleContainer.pack()
+#         ###### DEFINE CONTAINER voltar ######
+#         voltar = tk.Frame(self)
+#         voltar.pack()
 
-        ###### DEFINE CONTAINER linha Acoes ######
-        acaoContainer = tk.Frame(self)
-        acaoContainer.pack()
+#         self.titulo = tk.Label(titleContainer, text=" -- Painel do ADM -- ")
+#         self.titulo["font"] = ("Arial", "15", "bold")
+#         self.titulo.pack()
 
-        ###### DEFINE CONTAINER gerenciar senha ######
-        gerenciarsenha = tk.Frame(self)
-        gerenciarsenha.pack()
+#         self.lb_acao = tk.Label(acaoContainer, text="Ações", anchor="w")
+#         self.lb_acao["width"] = 30
+#         self.lb_acao["justify"] = tk.LEFT
+#         self.lb_acao.pack(side=tk.LEFT, pady=5)
 
-        ###### DEFINE CONTAINER voltar ######
-        voltar = tk.Frame(self)
-        voltar.pack()
+#         self.btn_gerenciarSenha = tk.Button(gerenciarsenha, text="Gerenciar Senha", command=lambda: master.switch_frame(
+#             GerenciarSenha, passwdNG, ""))
+#         self.btn_gerenciarSenha["width"] = 30
+#         self.btn_gerenciarSenha["justify"] = tk.LEFT
+#         self.btn_gerenciarSenha.pack(side=tk.LEFT, pady=5)
 
-        self.titulo = tk.Label(titleContainer, text=" -- Painel do ADM -- ")
-        self.titulo["font"] = ("Arial", "15", "bold")
-        self.titulo.pack()
-
-        self.lb_acao = tk.Label(acaoContainer, text="Ações", anchor="w")
-        self.lb_acao["width"] = 30
-        self.lb_acao["justify"] = tk.LEFT
-        self.lb_acao.pack(side=tk.LEFT, pady=5)
-
-        self.btn_gerenciarSenha = tk.Button(gerenciarsenha, text="Gerenciar Senha", command=lambda: master.switch_frame(
-            GerenciarSenha, passwdNG, ""))
-        self.btn_gerenciarSenha["width"] = 30
-        self.btn_gerenciarSenha["justify"] = tk.LEFT
-        self.btn_gerenciarSenha.pack(side=tk.LEFT, pady=5)
-
-        self.botao_back = tk.Button(
-            voltar, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
-        self.botao_back["width"] = 1
-        self.botao_back.pack(side=tk.LEFT)
+#         self.botao_back = tk.Button(
+#             voltar, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
+#         self.botao_back["width"] = 1
+#         self.botao_back.pack(side=tk.LEFT)
 
 
 if __name__ == "__main__":

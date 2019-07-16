@@ -372,7 +372,7 @@ class Psswd:
         # Fecha conexão com o servidor
         server.quit()
 
-        print "E-mail enviado com sucesso para %s:" % (msg['To'])
+        #print "E-mail enviado com sucesso para %s:" % (msg['To'])
 
     def encontrarUsuarioPorEmail(email):
         file = open('/etc/passwd')
