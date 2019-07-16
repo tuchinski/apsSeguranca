@@ -9,7 +9,7 @@ class SampleApp(tk.Tk):
     def __init__(self, psw):
         tk.Tk.__init__(self)
         self._frame = None
-        self.switch_frame(PainelAdm, psw)
+        self.switch_frame(GerenciarSenha, psw)
 
     def switch_frame(self, frame_class, psw, data=None):
         new_frame = frame_class(self, psw, data)
@@ -176,6 +176,12 @@ class Painel(tk.Frame):
         self.botao_change_pass_user["text"] = "Recover Password"
         self.botao_change_pass_user["width"] = 58
         self.botao_change_pass_user.pack(pady=5)
+
+        self.botao_adm_paienl = tk.Button(
+            primeiroContainer, command=lambda: master.switch_frame(PainelAdm, passwdNG))
+        self.botao_adm_paienl["text"] = "Adm Painel"
+        self.botao_adm_paienl["width"] = 58
+        self.botao_adm_paienl.pack(pady=5)
 
 
 class EditPass(tk.Frame):
@@ -423,25 +429,23 @@ class CreateUser(tk.Frame):
                           "Onde sua mão nasceu ?",
                           "Onde seu pai nasceu ?"
                           ]
-        # self.variable = 'Escreva uma pergunta'
 
-        self.lb_pergunta0 = tk.Label(
-            perguntaContainer, text="Pergunta:", anchor="w")
-        self.lb_pergunta0["width"] = 10
-        self.lb_pergunta0["justify"] = tk.LEFT
-        self.lb_pergunta0.pack(side=tk.LEFT, pady=5)
+        self.lb_pergunta = tk.Label(
+            perguntaContainer, text="Question:", anchor="w")
+        self.lb_pergunta["width"] = 10
+        self.lb_pergunta["justify"] = tk.LEFT
+        self.lb_pergunta.pack(side=tk.LEFT, pady=5)
+
         self.variable = tk.StringVar(perguntaContainer)
-
         self.variable.set(self.questions[1])  # default value
 
-        self.lb_pergunta = tk.OptionMenu(
+        self.box_pergunta = tk.OptionMenu(
             perguntaContainer, self.variable, *self.questions)
-        self.lb_pergunta["width"] = 40
-        self.lb_pergunta["justify"] = tk.RIGHT
-        self.lb_pergunta.pack(side=tk.RIGHT, pady=5)
+        self.box_pergunta["width"] = 46
+        self.box_pergunta.pack(side=tk.RIGHT, pady=5)
 
         self.lb_resposta = tk.Label(
-            respostaContainer, text="Resposta:", anchor="w")
+            respostaContainer, text="Answer:", anchor="w")
         self.lb_resposta["width"] = 30
         self.lb_resposta["justify"] = tk.LEFT
         self.lb_resposta.pack(side=tk.LEFT, pady=5)
@@ -505,8 +509,7 @@ class CreateUser(tk.Frame):
         self.botao_back["width"] = 1
         self.botao_back.pack(side=tk.LEFT)
 
-        self.botao_Finish = tk.Button(setimoContainer, command=lambda: self.get_data_new_user(
-            self.username.get(), self.password1.get(), self.password2.get()))
+        self.botao_Finish = tk.Button(setimoContainer, command=lambda: self.get_data_new_user(self.username.get(), self.password1.get(), self.password2.get(), self.name.get(), self.tell.get(), self.email.get(), self.variable.get(), self.resposta.get(), self.other.get("1.0", tk.END), self.var.get(), self.cal1.get_date(), self.cal2.get_date()))
         self.botao_Finish["text"] = "Finish"
         self.botao_Finish["width"] = 58
         self.botao_Finish.pack(side=tk.LEFT, pady=5)
@@ -527,41 +530,55 @@ class CreateUser(tk.Frame):
             self.cal1.pack_forget()
             self.lb_date2.pack_forget()
             self.cal2.pack_forget()
+    
+    def return_count_regex_text(self, text, regex_string, qtd_defined):
+        cont = 0
+        for i in text:
+            thereare = re.match(regex_string, i)
+            if thereare != None:
+                cont = cont + 1
+        
+        if int(qtd_defined) == int(cont) or int(qtd_defined) < int(cont):
+            return True
+        else:
+            return False
 
     def valid_password(self, password):
         rules_password = self.passwdNG.get_value_pass()
-        # tamanho = rules_password[0]
+        num = self.return_count_regex_text(password, "\d", int(rules_password[2]))
+        low = self.return_count_regex_text(password, "[a-z]", int(rules_password[0]))
+        upp = self.return_count_regex_text(password, "[A-Z]", int(rules_password[1]))
+        syb = self.return_count_regex_text(password, "(?=.*?[#?!@$%^&*-])", int(rules_password[3]))
 
-        digit = re.search(r"\d{str(rules_password[0])}", password)
-        uppercase = re.search(r"[A-Z]{rules_password[1]}", password)
-        lowercase = re.search(r"[a-z]{rules_password[2]}", password)
-        symbol = re.search(
-            r"[ !#$%@%&'()*+,-./[\\\]^_`{|}~"+r'"]{rules_password[3]}', password)
-        print(str(len(str(password))), digit, uppercase, lowercase, symbol)
-        x = len(str(password))
-        print(len(str(password)))
-        if x < 6:
-            self.lb_alert["text"] = "Passwords should consist of 6 characters."
-            self.lb_alert["fg"] = "red"
-        if digit == None:
-            self.lb_alert["text"] = "Passwords should contain digits [0-9]."
-            self.lb_alert["fg"] = "red"
-        if uppercase == None:
-            self.lb_alert["text"] = "Passwords should contain upper case characters."
-            self.lb_alert["fg"] = "red"
-        if lowercase == None:
-            self.lb_alert["text"] = "Passwords should contain lower case characters."
-            self.lb_alert["fg"] = "red"
-        if symbol == None:
-            self.lb_alert["text"] = "Passwords should contain symbols."
+        if(num == False):
+            print(self.return_count_regex_text(password, "\d", int(rules_password[2])))
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[2]) + " or more numbers" 
             self.lb_alert["fg"] = "red"
 
-        if (x > 6 and digit != None and uppercase != None and lowercase != None and symbol != None):
-            return (True)
+        if(low == False):
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[2]) + " or more lower case characters" 
+            self.lb_alert["fg"] = "red"
+            
+        if(upp == False):
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[0]) + " or more uppercase case characters" 
+            self.lb_alert["fg"] = "red"
+
+        if(syb == False):
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[3]) + " or more symbols" 
+            self.lb_alert["fg"] = "red"
+        
+        if(int(len(password)) >= int(rules_password[4])):
+            qtd = True
         else:
-            return (False)
+            self.lb_alert["text"] = "Passwords should contain " + str(rules_password[4]) + " or more characters" 
+            self.lb_alert["fg"] = "red"
 
-    def get_data_new_user(self, username, pass1, pass2):
+        if ((num and low and upp and syb and qtd) == True):
+            return True
+        else:
+            return False
+
+    def get_data_new_user(self, username, pass1, pass2, name, tell, email, var1, res, other, var2, ca11, cal2):
         if ((username and pass1 and pass2) != ""):
             if pass1 == pass2:
                 if (self.valid_password(pass1)):
@@ -669,7 +686,7 @@ class GerenciarSenha(tk.Frame):
 
         self.btn_ok = tk.Button(
             voltar, text="Concluir", command=lambda: self.funcao_ok(self.qtdLower.get(), self.qtdUpper.get(),
-                                                                    self.qtdNumeros.get(), self.qtdSimbolos.get(), self.tamanhoSenha.get()),)
+                                                                    self.qtdNumeros.get(), self.qtdSimbolos.get(), self.tamanhoSenha.get()))
         self.btn_ok["width"] = 50
         self.btn_ok.pack(side=tk.RIGHT)
 
@@ -688,11 +705,9 @@ class GerenciarSenha(tk.Frame):
             if int(tamSenha) >= 6:
                 self.lb_alert["text"] = "Sucess."
                 self.lb_alert["fg"] = "green"
-                self.passwdNG.values_pass(self.tamanhoSenha.get(), self.qtdLower.get(
-                ), self.qtdUpper.get(), self.qtdNumeros.get(), self.qtdSimbolos.get())
-                # self.master.switch_frame(PainelAdm, self.passwdNG)
+                self.passwdNG.values_pass(self.qtdLower.get(), self.qtdUpper.get(), self.qtdNumeros.get(), self.qtdSimbolos.get(), self.tamanhoSenha.get())
             else:
-                self.lb_alert["text"] = "the minimum size of your password must be 6 digits"
+                self.lb_alert["text"] = "The minimum size of your password must be 6 digits"
                 self.lb_alert["fg"] = "red"
 
         else:
@@ -794,5 +809,5 @@ if __name__ == "__main__":
     backend_passwd = Psswd()
     app = SampleApp(backend_passwd)
     app.title("NEW PASSWD")
-    app.geometry("500x300")
+    app.geometry("500x600")
     app.mainloop()

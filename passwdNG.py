@@ -326,12 +326,12 @@ class Psswd:
     rules_pass = []
 
     # def get_values_of_admin_password():
-    def values_pass(self, tamSenha, lower, upper, numero, simbolos):
-        self.rules_pass.append(tamSenha)
+    def values_pass(self, lower, upper, numero, simbolos, tamSenha):
         self.rules_pass.append(lower)
         self.rules_pass.append(upper)
         self.rules_pass.append(numero)
         self.rules_pass.append(simbolos)
+        self.rules_pass.append(tamSenha)
 
     def get_value_pass(self):
         return self.rules_pass
@@ -340,7 +340,7 @@ class Psswd:
 if __name__ == "__main__":
     passwdng = Psswd()
 
-    #passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
+    # passwdng.create_new_user("rafael", "rafaelsenha123", "Rafael Menezes Barboza", "4499X4534X", "ra29fa@gmail.com", "User to study", "1")
     # passwdng.save_shadow2('usersemsenha:*:18089:0:99999:7:::\n')
-    passwdng.unlockUser('teste2')
+    # passwdng.unlockUser('teste2')
 
