@@ -92,6 +92,7 @@ class Psswd:
                 maior = int(user[2])
         return maior
 
+    # Recieve new user data and a date to expire the account, if necessary
     def create_new_user(self, username, password, fullname=None, tellphone=None, email=None, other=None, nivel_access=None, security_question=None, security_asnwer=None,expirationDate =None):
         # Here, we have the line that goint to add in the file shadow
 
