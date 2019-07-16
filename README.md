@@ -11,9 +11,9 @@ You need to have the following packages installed:
  ### $ sudo apt install python3-pip
  ### $ pip3 install tkcalendar
 
-Para executar o programa você precisa escrever os seguintes comandos:
+- Para executar o programa você precisa escrever os seguintes comandos:
 
-sudo python3 interfaceTK.py
+### $ sudo python3 interfaceTK.py
 
 
 ## Equipe
