@@ -263,6 +263,18 @@ class Painel(tk.Frame):
         self.botao_adm_paienl["width"] = 58
         self.botao_adm_paienl.pack(pady=5)
 
+        # self.botao_change_pass_user = tk.Button(
+        #     primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG, "painelAdm"))
+        # self.botao_change_pass_user["text"] = "Painel do ADM"
+        # self.botao_change_pass_user["width"] = 58
+        # self.botao_change_pass_user.pack(pady=5)
+
+        # self.botao_change_pass_user = tk.Button(
+        #     primeiroContainer, command=lambda: master.switch_frame(PainelAdm, passwdNG))
+        # self.botao_change_pass_user["text"] = "Painel do ADM"
+        # self.botao_change_pass_user["width"] = 58
+        # self.botao_change_pass_user.pack(pady=5)
+
  
 class EditPass(tk.Frame):
     def __init__(self, master, passwdNG, data=None):
@@ -723,12 +735,12 @@ class GerenciarSenha(tk.Frame):
         voltar = tk.Frame(self)
         voltar.pack()
 
-        self.titulo = tk.Label(titleContainer, text=" -- Gerenciar Senha -- ")
+        self.titulo = tk.Label(titleContainer, text=" -- Manage Password -- ")
         self.titulo["font"] = ("Arial", "15", "bold")
         self.titulo.pack()
 
         self.lb_lowerCase = tk.Label(
-            lowerContainer, text="Quantidade de caracteres minúsculos(a - z)", anchor="w")
+            lowerContainer, text="Number of lowercase characters(a - z):", anchor="w")
         self.lb_lowerCase["width"] = 50
         self.lb_lowerCase["justify"] = tk.LEFT
         self.lb_lowerCase.pack(side=tk.LEFT, pady=5)
@@ -738,7 +750,7 @@ class GerenciarSenha(tk.Frame):
         self.qtdLower.pack(side=tk.RIGHT, pady=5)
 
         self.lb_upperCase = tk.Label(
-            upperContainer, text="Quantidade de caracteres maiusculos (A - Z)", anchor="w")
+            upperContainer, text="Number of uppercase characters (A - Z):", anchor="w")
         self.lb_upperCase["width"] = 50
         self.lb_upperCase["justify"] = tk.LEFT
         self.lb_upperCase.pack(side=tk.LEFT, pady=5)
@@ -748,7 +760,7 @@ class GerenciarSenha(tk.Frame):
         self.qtdUpper.pack(side=tk.RIGHT, pady=5)
 
         self.lb_qtdNumeros = tk.Label(
-            qtdNumberContainer, text="Quantidade de numeros(0 - 9)", anchor="w")
+            qtdNumberContainer, text="Number of numbers(0 - 9):", anchor="w")
         self.lb_qtdNumeros["width"] = 50
         self.lb_qtdNumeros["justify"] = tk.LEFT
         self.lb_qtdNumeros.pack(side=tk.LEFT, pady=5)
@@ -758,7 +770,7 @@ class GerenciarSenha(tk.Frame):
         self.qtdNumeros.pack(side=tk.RIGHT, pady=5)
 
         self.lb_qtdSimbolos = tk.Label(
-            qtdSimbolosContainer, text="Quantidade de simbolos (!@$-)(*&¨%)", anchor="w")
+            qtdSimbolosContainer, text="Number of symbols (!@$-)(*&¨%):", anchor="w")
         self.lb_qtdSimbolos["width"] = 50
         self.lb_qtdSimbolos["justify"] = tk.LEFT
         self.lb_qtdSimbolos.pack(side=tk.LEFT, pady=5)
@@ -768,7 +780,7 @@ class GerenciarSenha(tk.Frame):
         self.qtdSimbolos.pack(side=tk.RIGHT, pady=5)
 
         self.lb_tamanhodaSenha = tk.Label(
-            tamanhoSenhaContainer, text="Tamanho da senha", anchor="w")
+            tamanhoSenhaContainer, text="Password size:", anchor="w")
         self.lb_tamanhodaSenha["width"] = 50
         self.lb_tamanhodaSenha["justify"] = tk.LEFT
         self.lb_tamanhodaSenha.pack(side=tk.LEFT, pady=5)
@@ -778,7 +790,7 @@ class GerenciarSenha(tk.Frame):
         self.tamanhoSenha.pack(side=tk.RIGHT, pady=5)
 
         self.btn_ok = tk.Button(
-            voltar, text="Concluir", command=lambda: self.funcao_ok(self.qtdLower.get(), self.qtdUpper.get(),
+            voltar, text="conclude", command=lambda: self.funcao_ok(self.qtdLower.get(), self.qtdUpper.get(),
                                                                     self.qtdNumeros.get(), self.qtdSimbolos.get(), self.tamanhoSenha.get()))
         self.btn_ok["width"] = 50
         self.btn_ok.pack(side=tk.RIGHT)
@@ -839,7 +851,7 @@ class GerenciarSenha(tk.Frame):
 #         self.lb_acao["justify"] = tk.LEFT
 #         self.lb_acao.pack(side=tk.LEFT, pady=5)
 
-#         self.btn_gerenciarSenha = tk.Button(gerenciarsenha, text="Gerenciar Senha", command=lambda: master.switch_frame(
+#         self.btn_gerenciarSenha = tk.Button(gerenciarsenha, text="Manage password", command=lambda: master.switch_frame(
 #             GerenciarSenha, passwdNG, ""))
 #         self.btn_gerenciarSenha["width"] = 30
 #         self.btn_gerenciarSenha["justify"] = tk.LEFT
