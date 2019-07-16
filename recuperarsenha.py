@@ -11,6 +11,8 @@ def recuperarSenha(email):
 	alfabeto = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	newPassword = "".join(random.sample(alfabeto,8))
 
+	redefinirSenha(encontrarUsuarioPorEmail(email), newPassword)
+
 	msg = MIMEMultipart() # Cria instância do objeto de mensagem
 	message = " Olá! Sua nova senha para o PasswdNG é: " + newPassword + ".\n Recomendamos que após o login você altere a senha."
 	 
@@ -38,7 +40,7 @@ def recuperarSenha(email):
 
 	print "successfully sent email to %s:" % (msg['To'])
 
-def encontrarUsuario(email):
+def encontrarUsuarioPorEmail(email):
 	file = open('/etc/passwd')
 	for i in file.readlines():
 		if email in i:
@@ -47,7 +49,10 @@ def encontrarUsuario(email):
 	usuario = usuario[0]
 	return usuario
 
-def alterarSenha(usuario, senha):
+def redefinirSenha(usuario, senha):
+	newPassword = encriptPassword(senha)
+
+def encriptPassword(senha):
 	salt = '$6$'
 	possibleSalt = string.ascii_letters + string.digits
 
@@ -57,34 +62,9 @@ def alterarSenha(usuario, senha):
 	salt = salt + '$'
 	encriptedPassword = crypt.crypt(senha,salt)
 
-	c = -1
-
-	file = open('teste.txt', 'rw')
-	for i in file.readlines():
-		c = c + 1
-		if usuario in i:
-			line = i
-			print(line)
-			c_line = c
-
-	aux = line.split(':')[0] + ":" + line.split(':')[1]
-	newKey = line.split(':')[0] + ":" + encriptedPassword
-
-	file = open('teste.txt', 'rw')
-	for i in file.readlines():
-		if aux in i:
-			print(aux)
-
-def alterar_linha(path,index_linha,nova_linha):
-    with open(path,'r') as f:
-        texto=f.readlines()
-    with open(path,'w') as f:
-        for i in texto:
-            if texto.index(i)==index_linha:
-                f.write(nova_linha+'\n')
-            else:
-                f.write(i)
+	return encriptedPassword
 
 #recuperarSenha("allisonsampaiox@gmail.com")
-alterarSenha("allisonsampaiox", "123mudar")
+#alterarSenha("allisonsampaiox", "123mudar")
 #alterar_linha("teste.txt", 0, "oi")
+encriptPassword("aaaaaaaaaaaoi")
