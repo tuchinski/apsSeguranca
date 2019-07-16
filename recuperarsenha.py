@@ -5,7 +5,9 @@ import smtplib
 import random
 import crypt
 import string
+import fileinput
 from random import choice
+import sys
 
 def recuperarSenha(email):
 	alfabeto = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -38,10 +40,10 @@ def recuperarSenha(email):
 	# Fecha conexão com o servidor
 	server.quit()
 
-	print "successfully sent email to %s:" % (msg['To'])
+	print "E-mail enviado com sucesso para %s:" % (msg['To'])
 
 def encontrarUsuarioPorEmail(email):
-	file = open('/etc/passwd')
+	file = open('passwdteste')
 	for i in file.readlines():
 		if email in i:
 			line = i
@@ -51,6 +53,16 @@ def encontrarUsuarioPorEmail(email):
 
 def redefinirSenha(usuario, senha):
 	newPassword = encriptPassword(senha)
+
+	file = open('shadowteste')
+	for i in file.readlines():
+		if usuario in i:
+			oldPassword = (i[len(usuario)+1 : i.index(':', i.index(':') + 1)])
+			i.replace(oldPassword, newPassword)
+
+			for line in fileinput.FileInput("shadowteste",inplace=1):
+			   line = line.replace(oldPassword,newPassword)
+			   sys.stdout.write(line)
 
 def encriptPassword(senha):
 	salt = '$6$'
@@ -63,8 +75,3 @@ def encriptPassword(senha):
 	encriptedPassword = crypt.crypt(senha,salt)
 
 	return encriptedPassword
-
-#recuperarSenha("allisonsampaiox@gmail.com")
-#alterarSenha("allisonsampaiox", "123mudar")
-#alterar_linha("teste.txt", 0, "oi")
-encriptPassword("aaaaaaaaaaaoi")
