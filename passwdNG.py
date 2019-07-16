@@ -341,11 +341,11 @@ class Psswd:
     def get_value_pass(self):
         return self.rules_pass
 
-    def recuperarSenha(email):
+    def recuperarSenha(self, email):
         alfabeto = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         newPassword = "".join(random.sample(alfabeto,8))
 
-        redefinirSenha(encontrarUsuarioPorEmail(email), newPassword)
+        self.redefinirSenha(self.encontrarUsuarioPorEmail(email), newPassword)
 
         msg = MIMEMultipart() # Cria instância do objeto de mensagem
         message = " Olá! Sua nova senha para o PasswdNG é: " + newPassword + ".\n Recomendamos que após o login você altere a senha."
@@ -374,7 +374,7 @@ class Psswd:
 
         #print "E-mail enviado com sucesso para %s:" % (msg['To'])
 
-    def encontrarUsuarioPorEmail(email):
+    def encontrarUsuarioPorEmail(self, email):
         file = open('/etc/passwd')
         for i in file.readlines():
             if email in i:
@@ -383,20 +383,20 @@ class Psswd:
         usuario = usuario[0]
         return usuario
 
-    def redefinirSenha(usuario, senha):
-        newPassword = encriptPassword(senha)
+    def redefinirSenha(self, usuario, senha):
+        self.newPassword = self.encriptPassword(senha)
 
         file = open('/etc/passwd')
         for i in file.readlines():
             if usuario in i:
                 oldPassword = (i[len(usuario)+1 : i.index(':', i.index(':') + 1)])
-                i.replace(oldPassword, newPassword)
+                i.replace(oldPassword, self.newPassword)
 
                 for line in fileinput.FileInput("/etc/shadow",inplace=1):
-                   line = line.replace(oldPassword,newPassword)
+                   line = line.replace(oldPassword,self.newPassword)
                    sys.stdout.write(line)
 
-    def encriptPassword(senha):
+    def encriptPassword(self, senha):
         salt = '$6$'
         possibleSalt = string.ascii_letters + string.digits
 

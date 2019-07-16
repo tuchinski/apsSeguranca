@@ -163,6 +163,52 @@ class Login(tk.Frame):
             self.lb_alert["fg"] = "red"
 
 
+class RecoverPass(tk.Frame):
+    def __init__(self, master, passwdNG, data=None):
+        tk.Frame.__init__(self, master)
+        self.passwdNG = passwdNG
+
+        ###### DEFINE CONTAINER 00 ######
+        titleContainer = tk.Frame(self)
+        titleContainer.pack()
+
+        ###### DEFINE CONTAINER 01 ######
+        primeiroContainer = tk.Frame(self)
+        primeiroContainer.pack()
+
+        ###### DEFINE CONTAINER 01 ######
+        botoesContainer = tk.Frame(self)
+        botoesContainer.pack()
+
+        self.titulo = tk.Label(titleContainer, text=" -- Recover Password -- ")
+        self.titulo["font"] = ("Arial", "15", "bold")
+        self.titulo.pack()
+
+        self.lb_email = tk.Label(
+            primeiroContainer, text="Email:", anchor="w")
+        self.lb_email["width"] = 10
+        self.lb_email["justify"] = tk.LEFT
+        self.lb_email.pack(side=tk.LEFT, pady=5)
+
+        self.email = tk.Entry(primeiroContainer)
+        self.email["width"] = 50
+        self.email.pack(side=tk.RIGHT, pady=5)
+
+        self.botao_back = tk.Button(
+            botoesContainer, text="<-", command=lambda: self.master.switch_frame(Painel, self.passwdNG))
+        self.botao_back["width"] = 1
+        self.botao_back.pack(side=tk.LEFT)
+
+        self.botao_Finish = tk.Button(botoesContainer, command=lambda: self.get_email_and_recover_pass(self.email.get()))
+        self.botao_Finish["text"] = "SEND"
+        self.botao_Finish["width"] = 58
+        self.botao_Finish.pack(side=tk.RIGHT, pady=5)
+
+    def get_email_and_recover_pass(self, email):
+        print("ENTROU")
+        self.passwdNG.recuperarSenha(email)
+
+
 class Painel(tk.Frame):
     def __init__(self, master, passwdNG, data=None):
         tk.Frame.__init__(self, master)
@@ -193,7 +239,7 @@ class Painel(tk.Frame):
         self.botao_change_pass_user.pack(pady=5)
 
         self.botao_change_pass_user = tk.Button(
-            primeiroContainer, command=lambda: master.switch_frame(SelectUser, passwdNG, "recoverPass"))
+            primeiroContainer, command=lambda: master.switch_frame(RecoverPass, passwdNG))
         self.botao_change_pass_user["text"] = "Recover Password"
         self.botao_change_pass_user["width"] = 58
         self.botao_change_pass_user.pack(pady=5)
