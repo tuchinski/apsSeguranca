@@ -691,6 +691,16 @@ class CreateUser(tk.Frame):
                     self.lb_alert["text"] = "The user was created."
                     self.lb_alert["fg"] = "green"
                     self.passwdNG.create_new_user(username, pass1, name, tell, email, other, "1", var1, res)
+                    #self,
+                     #username,
+                      #password, 
+                      #fullname=None, 
+                      #tellphone=None, 
+                      #email=None, 
+                      #other=None, 
+                      #nivel_access=None, 
+                      #security_question=None,
+                     #security_asnwer=None
             else:
                 self.lb_alert["text"] = "The passwords do not match."
                 self.lb_alert["fg"] = "red"
