@@ -31,3 +31,6 @@ The basic functions of Linux passwd have been implemented, such as creating a us
 We have a Admin panel, where it can determine the amount of capital letters, lowercase letters the number of symbols and numbers of the user's password. It can also choose a period in which the user's password will be valid.
 
 All these features are made by the Tkinter library, which is where graphical interfaces are made in Python.
+
+## Problems not addressed:
+- Two-step authentication not correctly arranged (Question and Answer)
